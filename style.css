@@ -1,0 +1,172 @@
+<style>
+    /* --- PENGATURAN DASAR & LATAR BELAKANG SOFT --- */
+    * { 
+        box-sizing: border-box; 
+        margin: 0; 
+        padding: 0; 
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; 
+    }
+    
+    body { 
+        /* Kombinasi background soft dengan gradasi kuning-hijau pastel yang teduh */
+        background: linear-gradient(135deg, #fefae0 0%, #e8f5e9 100%); 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 100vh; 
+        padding: 20px; 
+    }
+
+    /* --- CONTAINER FORMULIR MODERN --- */
+    .container { 
+        background-color: #ffffff; 
+        padding: 35px 30px; 
+        border-radius: 16px; /* Sudut melengkung modern, tidak kaku kotak */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+        width: 100%; 
+        max-width: 500px; 
+    }
+
+    h2 { 
+        text-align: center; 
+        margin-bottom: 25px; 
+        color: #1b5e20; /* Tulisan jelas: Hijau Tua */
+        font-weight: 700;
+        font-size: 24px;
+    }
+
+    .form-group { 
+        margin-bottom: 18px; 
+    }
+
+    /* --- LABEL TULISAN JELAS --- */
+    label { 
+        display: block; 
+        margin-bottom: 6px; 
+        color: #2e7d32; /* Tulisan jelas: Hijau Medium */
+        font-weight: 600; 
+        font-size: 14px;
+    }
+
+    /* --- KOLOM INPUT MODERN & INTERAKTIF --- */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="tel"], 
+    select { 
+        width: 100%; 
+        padding: 12px 14px; 
+        border: 2px solid #e0e0e0; 
+        border-radius: 10px; /* Sudut input bulat melengkung modern */
+        font-size: 16px; 
+        color: #212121; /* Tulisan jelas: Abu-abu gelap mendekati hitam */
+        background-color: #fafafa;
+        transition: all 0.3s ease;
+    }
+
+    /* Efek fokus saat kolom diklik: Berubah warna lembut dengan aksen Kuning */
+    input:focus, select:focus { 
+        border-color: #81c784; /* Border Hijau Lembut */
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(255, 235, 59, 0.3); /* Efek lingkaran cahaya Kuning Lembut */
+        outline: none;
+    }
+
+    /* Kolom khusus Nama otomatis CAPSLOCK */
+    #nama {
+        text-transform: uppercase;
+    }
+
+    /* --- TOMBOL UTAMA --- */
+    button[type="submit"] { 
+        width: 100%; 
+        padding: 14px; 
+        background-color: #4caf50; /* Hijau Utama */
+        color: white; 
+        border: none; 
+        border-radius: 10px; /* Sudut melengkung serasi dengan kolom */
+        font-size: 16px; 
+        font-weight: bold; 
+        cursor: pointer; 
+        transition: all 0.2s ease;
+        margin-top: 10px; 
+    }
+
+    button[type="submit"]:hover { 
+        background-color: #388e3c; /* Hijau lebih tua saat disorot */
+    }
+
+    button:disabled { 
+        background-color: #cccccc; 
+        cursor: not-allowed; 
+    }
+
+    /* --- STYLING POPUP MODERN GENERAL --- */
+    .popup-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(5px);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 9999;
+    }
+    
+    .popup-content {
+        background-color: #ffffff;
+        padding: 35px 25px;
+        border-radius: 20px; /* Sudut popup melengkung halus */
+        text-align: center;
+        max-width: 420px;
+        width: 90%;
+        animation: popupScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .popup-icon {
+        width: 65px; height: 65px;
+        color: white; font-size: 30px; font-weight: bold;
+        line-height: 65px; border-radius: 50%; margin: 0 auto 20px;
+    }
+    
+    .popup-content h3 { margin-bottom: 12px; font-size: 22px; font-weight: 700; }
+    .popup-content p { color: #333333; font-size: 15px; margin-bottom: 25px; line-height: 1.5; }
+
+    /* --- VARIAN POPUP SUKSES (HIJAU + AKSEN KUNING SOFT) --- */
+    .shadow-sukses { 
+        box-shadow: 0 15px 30px rgba(76, 175, 80, 0.15); 
+    }
+    .icon-sukses { 
+        background-color: #4caf50; 
+        box-shadow: 0 0 0 5px rgba(255, 235, 59, 0.4); /* Variasi lingkaran cahaya kuning lembut */
+    }
+    .btn-sukses { 
+        background-color: #4caf50; color: white; border: none; padding: 12px 30px; 
+        font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; 
+    }
+    .btn-sukses:hover { background-color: #388e3c; }
+
+    /* --- VARIAN POPUP DUPLIKAT / EROR (MERAH) --- */
+    .shadow-eror { 
+        box-shadow: 0 15px 30px rgba(211, 47, 47, 0.15); 
+    }
+    .icon-eror { 
+        background-color: #d32f2f; 
+        box-shadow: 0 0 0 5px rgba(211, 47, 47, 0.2);
+    }
+    .btn-eror { 
+        background-color: #d32f2f; color: white; border: none; padding: 12px 30px; 
+        font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; 
+    }
+    .btn-eror:hover { background-color: #b71c1c; }
+
+    /* --- ANIMASI POPUP --- */
+    @keyframes popupScale {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Kelas untuk membuat kolom berwarna merah transparan 40% */
+.input-error {
+    border-color: #e53935 !important;
+    background-color: rgba(244, 67, 54, 0.4) !important;
+}
+
+</style>
