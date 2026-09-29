@@ -1,4 +1,4 @@
-const SCRIPT_URL = "URL_WEB_APP_GOOGLE_SCRIPT_KAMU"; // Ganti dengan URL /exec milikmu
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMb85TdzJcgaegJERtMAB0mEjpatdpHwFVaa4ZNn97Km0Srf3EvMe1lxqtXckVOPPuqA/exec"; // Ganti dengan URL /exec milikmu
 
 const form = document.getElementById("registrationForm");
 const successPopup = document.getElementById("successPopup");
