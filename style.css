@@ -76,7 +76,7 @@ select:focus {
     outline: none;
 }
 
-#nama {
+#nama_anak, #nama {
     text-transform: uppercase;
 }
 
