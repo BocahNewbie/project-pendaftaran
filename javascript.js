@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_AD7jZfP7jeDgiG98N8G-gwb2JImQFPhjKakg404cyqtXdZN38tLMq0lzBm9i9dnoFA/exec"; // Ganti dengan URL /exec milikmu
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC9veTqyIfGKc4mL5ALhqEB7ShEMIY87d9r8WdxZpFB1bLBsi4w30QE-tqdQTBW882uQ/exec"; // Ganti dengan URL /exec milikmu
 
 const form = document.getElementById("registrationForm");
 const successPopup = document.getElementById("successPopup");
