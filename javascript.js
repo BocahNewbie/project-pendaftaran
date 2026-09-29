@@ -52,8 +52,8 @@ form.addEventListener("submit", (e) => {
   submitBtn.textContent = "Mengirim...";
 
   const formData = {
-    nama: document.getElementById("nama_anak").value,
-    nama_ortu: document.getElementById("nama_ortu").value, // BARIS BARU INI DITAMBAHKAN
+    nama: document.getElementById("nama_anak").value,     // Menangkap ID anak
+    nama_ortu: document.getElementById("nama").value,     // Menangkap ID orang tua
     email: document.getElementById("email").value,
     telepon: document.getElementById("telepon").value,
     kategori: document.getElementById("kategori").value
