@@ -224,3 +224,53 @@ button:disabled {
     color: #7c4dff;
     text-transform: uppercase;
 }
+
+/* --- TAMPILAN DAFTAR PESERTA --- */
+.peserta-section {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 2px dashed rgba(124, 77, 255, 0.2);
+}
+
+.peserta-section h3 {
+    text-align: center;
+    color: #1a237e;
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.kategori-box {
+    background: rgba(248, 250, 252, 0.8);
+    border: 1px solid #e0e6ed;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+}
+
+.kategori-box h4 {
+    color: #303f9f;
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.kategori-box ol {
+    padding-left: 20px;
+    color: #37474f;
+    font-size: 14px;
+}
+
+.kategori-box li {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.kategori-box li.empty {
+    list-style: none;
+    font-style: italic;
+    color: #90a4ae;
+    font-weight: normal;
+    margin-left: -20px;
+}
