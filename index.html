@@ -33,12 +33,31 @@
             </div>
             <button type="submit" id="submitBtn">Daftar Sekarang</button>
         </form>
-        
+
+        <!-- AREA DAFTAR PESERTA PER KATEGORI -->
+        <div class="peserta-section">
+            <h3>Daftar Peserta Terdaftar</h3>
+            
+            <div class="kategori-box">
+                <h4>Kategori Merangkak (<span id="count-merangkak">0</span>)</h4>
+                <ol id="list-merangkak"><li>Memuat data...</li></ol>
+            </div>
+
+            <div class="kategori-box">
+                <h4>Kategori Berjalan (<span id="count-berjalan">0</span>)</h4>
+                <ol id="list-berjalan"><li>Memuat data...</li></ol>
+            </div>
+
+            <div class="kategori-box">
+                <h4>Kategori Pindah Bola (<span id="count-pindah-bola">0</span>)</h4>
+                <ol id="list-pindah-bola"><li>Memuat data...</li></ol>
+            </div>
+        </div>
+
         <footer class="credit">
             Created by <span>BOCAH NEWBIE</span>
         </footer>
     </div>
-</div>
 
     <!-- POPUP SUKSES -->
     <div id="successPopup" class="popup-overlay" style="display: none;">
@@ -57,7 +76,7 @@
             <button id="closeDuplicateBtn">Periksa Kembali</button>
         </div>
     </div>
-    
+
     <script src="javascript.js"></script>
 </body>
 </html>
