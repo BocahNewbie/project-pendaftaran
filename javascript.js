@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMb85TdzJcgaegJERtMAB0mEjpatdpHwFVaa4ZNn97Km0Srf3EvMe1lxqtXckVOPPuqA/exec"; // Ganti dengan URL /exec milikmu
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_AD7jZfP7jeDgiG98N8G-gwb2JImQFPhjKakg404cyqtXdZN38tLMq0lzBm9i9dnoFA/exec"; // Ganti dengan URL /exec milikmu
 
 const form = document.getElementById("registrationForm");
 const successPopup = document.getElementById("successPopup");
@@ -52,7 +52,8 @@ form.addEventListener("submit", (e) => {
   submitBtn.textContent = "Mengirim...";
 
   const formData = {
-    nama: document.getElementById("nama").value,
+    nama: document.getElementById("nama_anak").value,
+    nama_ortu: document.getElementById("nama_ortu").value, // BARIS BARU INI DITAMBAHKAN
     email: document.getElementById("email").value,
     telepon: document.getElementById("telepon").value,
     kategori: document.getElementById("kategori").value
