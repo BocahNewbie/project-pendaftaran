@@ -1,12 +1,12 @@
 :root {
-    --bg-primary: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.75);
+    --bg-primary: #090d16;
+    --card-bg: rgba(30, 41, 59, 0.85);
     --border-glass: rgba(255, 255, 255, 0.08);
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --accent-gold: #d4af37;
     --accent-gold-hover: #e6c547;
-    --input-bg: rgba(15, 23, 42, 0.6);
+    --input-bg: rgba(15, 23, 42, 0.7);
 }
 
 body {
@@ -15,30 +15,44 @@ body {
     color: var(--text-main);
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
+    padding: 30px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Container Utama bergaya Glassmorphism Mewah */
-.container, .main-container, form {
+/* Wrapper utama agar form dan tabel bersandingan rapi di layar luas */
+.page-wrapper {
+    display: flex;
+    gap: 30px;
+    max-width: 1100px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Card Container ala Glassmorphism Mewah */
+.card-container {
     background: var(--card-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
-    padding: 35px;
-    width: 100%;
-    max-width: 550px;
+    padding: 30px;
+    flex: 1;
+    min-width: 320px;
+    max-width: 520px;
     box-sizing: border-box;
 }
 
 h2, h3 {
     color: var(--text-main);
     font-weight: 600;
+    font-size: 18px;
     letter-spacing: -0.5px;
+    margin-top: 0;
     margin-bottom: 20px;
     text-align: center;
     border-bottom: 1px solid var(--border-glass);
@@ -54,8 +68,8 @@ input, select, textarea {
     padding: 12px 16px;
     color: var(--text-main);
     font-size: 14px;
-    margin-top: 6px;
-    margin-bottom: 16px;
+    margin-top: 5px;
+    margin-bottom: 15px;
     box-sizing: border-box;
     transition: all 0.3s ease;
 }
@@ -73,8 +87,8 @@ label {
     letter-spacing: 0.3px;
 }
 
-/* Tombol Mewah dengan Aksen Gold */
-button, .btn-submit {
+/* Tombol Mewah Beraksen Gold */
+button, #submitBtn {
     background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
     color: #0f172a;
     font-weight: 600;
@@ -87,22 +101,24 @@ button, .btn-submit {
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+    margin-top: 5px;
 }
 
-button:hover, .btn-submit:hover {
+button:hover, #submitBtn:hover {
     background: linear-gradient(135deg, #e6c547 0%, #bd910b 100%);
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 
-/* Info Kuota Modern */
+/* Info Sisa Kuota */
 #infoKuotaContainer ul {
     list-style: none;
     padding: 0;
+    margin: 0 0 20px 0;
 }
 
 #infoKuotaContainer li {
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(15, 23, 42, 0.5);
     border: 1px solid var(--border-glass);
     padding: 10px 14px;
     border-radius: 8px;
@@ -111,33 +127,43 @@ button:hover, .btn-submit:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--text-muted);
 }
 
-/* Tabel Peserta Mewah */
+/* Tabel Peserta Modern */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
 table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(15, 23, 42, 0.6);
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--border-glass);
-    margin-top: 15px;
 }
 
 th {
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(30, 41, 59, 0.95);
     color: var(--accent-gold);
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    padding: 14px;
+    padding: 12px 10px;
     border-bottom: 1px solid var(--border-glass);
     text-align: left;
 }
 
+th:first-child, td:first-child {
+    text-align: center;
+    width: 40px;
+}
+
 td {
-    padding: 12px 14px;
+    padding: 12px 10px;
     font-size: 13px;
     color: var(--text-main);
     border-bottom: 1px solid var(--border-glass);
@@ -151,7 +177,6 @@ tr:hover td {
     background: rgba(255, 255, 255, 0.03);
 }
 
-/* Credit / Footer kecil */
 .credit {
     text-align: center;
     font-size: 12px;
