@@ -1,10 +1,14 @@
 const scriptURL = 'https://script.google.com/macros/s/AKfycbzWrBVYTFi22twab_zOpYoQcARVMbibBs6Jo_OIj9H2TateFVWxmGmhnVuV6UOGdvuggg/exec';
-const MAX_KUOTA = 13; // Kuota maksimal diperbarui menjadi 13 orang per hari
+const MAX_KUOTA = 13;
 
 document.addEventListener("DOMContentLoaded", function() {
     loadDataKuota();
+    
+    const filterTgl = document.getElementById('filterTanggal');
+    if (filterTgl) {
+        filterTgl.addEventListener('change', renderPesertaDiSidebar);
+    }
 
-    // Tombol tutup modal popup agar dapat diklik dengan normal
     const closeBtn = document.getElementById('closeModalBtn');
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
@@ -13,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Mengambil data kuota dari Google Sheets via JSONP
+// Mengambil data kuota & peserta dari Google Sheets via JSONP
 function loadDataKuota() {
     const oldScript = document.getElementById('jsonpScript');
     if (oldScript) {
@@ -26,14 +30,16 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
-// Fungsi global penerima data kuota dari Google Apps Script
+// Fungsi global penerima data dari Google Apps Script
 window.handleKuotaData = function(data) {
+    window.allDataPeserta = data; // Simpan data global untuk sidebar
+    
     const selectTanggalForm = document.getElementById('tanggal');
     if (!selectTanggalForm) return;
     
     const options = selectTanggalForm.querySelectorAll('option');
-
     const countMap = {};
+
     if (Array.isArray(data)) {
         data.forEach(row => {
             let tgl = row.tanggal ? row.tanggal.toString().trim() : "";
@@ -52,12 +58,46 @@ window.handleKuotaData = function(data) {
                 option.text = tglValue + " (PENUH - 13/13)";
             } else {
                 option.disabled = false;
-                // Menampilkan informasi sisa kuota di pilihan dropdown
                 option.text = tglValue + ` (${jumlahPendaftar}/13)`;
             }
         }
     });
+
+    renderPesertaDiSidebar();
 };
+
+// Menampilkan list peserta (Nama & Jam) di sidebar berdasarkan tanggal yang dipilih
+function renderPesertaDiSidebar() {
+    const filterElement = document.getElementById('filterTanggal');
+    const listContainer = document.getElementById('listPeserta');
+    const kuotaBadge = document.getElementById('kuotaBadge');
+    
+    if (!filterElement || !listContainer) return;
+
+    const filterTgl = filterElement.value;
+    listContainer.innerHTML = "";
+    
+    let pesertaList = [];
+    if (window.allDataPeserta && Array.isArray(window.allDataPeserta)) {
+        pesertaList = window.allDataPeserta.filter(row => row.tanggal && row.tanggal.toString().trim() === filterTgl);
+    }
+
+    let sisaKuota = MAX_KUOTA - pesertaList.length;
+    if (kuotaBadge) {
+        kuotaBadge.textContent = `Terisi: ${pesertaList.length}/${MAX_KUOTA} | Sisa Kuota: ${sisaKuota > 0 ? sisaKuota : 0}`;
+    }
+
+    if (pesertaList.length === 0) {
+        listContainer.innerHTML = "<li>Belum ada peserta di tanggal ini.</li>";
+        return;
+    }
+
+    pesertaList.forEach((p, index) => {
+        let li = document.createElement('li');
+        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.jam || '-'}</b>`;
+        listContainer.appendChild(li);
+    });
+}
 
 // Event Submit Form Pendaftaran
 document.getElementById('pendaftaranForm').addEventListener('submit', function(e) {
@@ -74,11 +114,9 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
 
     const submitBtn = document.getElementById('submitBtn');
     const loadingDiv = document.getElementById('loading');
-    const responseMessage = document.getElementById('responseMessage');
 
     submitBtn.disabled = true;
     loadingDiv.style.display = 'block';
-    responseMessage.textContent = '';
 
     fetch(scriptURL, {
         method: 'POST',
@@ -93,7 +131,6 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         loadingDiv.style.display = 'none';
         submitBtn.disabled = false;
         
-        // Tampilkan Modal Popup Berhasil
         const modal = document.getElementById('popupModal');
         if (modal) {
             modal.style.display = 'flex';
@@ -101,14 +138,12 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         
         document.getElementById('pendaftaranForm').reset();
         
-        // Refresh pengecekan kuota setelah submit
+        // Refresh data dan kuota setelah submit
         setTimeout(loadDataKuota, 1500);
     })
     .catch(error => {
         loadingDiv.style.display = 'none';
         submitBtn.disabled = false;
-        
-        responseMessage.style.color = 'red';
-        responseMessage.textContent = 'Terjadi kesalahan: ' + error;
+        alert('Terjadi kesalahan: ' + error);
     });
 });
