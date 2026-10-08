@@ -256,25 +256,3 @@ tr:hover td {
     background: linear-gradient(135deg, #99f6e4 0%, #5eead4 100%);
     transform: translateY(-1px);
 }
-
-.progress-bar-track {
-    width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.progress-bar-fill {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, #d4af37, #f3e5ab, #d4af37);
-    background-size: 200% 100%;
-    animation: loadingAnimation 1.5s infinite linear;
-    border-radius: 4px;
-}
-
-@keyframes loadingAnimation {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
