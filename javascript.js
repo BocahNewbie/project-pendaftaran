@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Paksa input teks menjadi huruf kapital secara otomatis saat diketik
     const inputNama = document.getElementById('nama');
     const inputAlamat = document.getElementById('alamat');
     if (inputNama) inputNama.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
@@ -34,11 +33,9 @@ function loadDataKuota() {
 function formatTanggal(tglStr) {
     if (!tglStr) return '-';
     let str = tglStr.toString().trim();
-    // Jika dari spreadsheet bentuknya sudah teks "30 Oktober 2026", langsung kembalikan
     if (!str.includes('T') && !str.includes('-')) {
         return str;
     }
-    // Jika bentuknya format ISO (YYYY-MM-DD), ambil bagian tahun, bulan, hari secara manual
     let cleanStr = str.split('T')[0];
     let parts = cleanStr.split('-');
     if (parts.length === 3) {
@@ -53,7 +50,6 @@ function formatTanggal(tglStr) {
     return tglStr;
 }
 
-// Helper untuk sorting tanggal secara akurat
 function parseTanggalCustom(tglStr) {
     if (!tglStr) return new Date(8640000000000);
     let formatted = formatTanggal(tglStr);
@@ -73,45 +69,97 @@ function parseTanggalCustom(tglStr) {
 
 window.handleKuotaData = function(data) {
     const selectTanggalForm = document.getElementById('tanggal');
-    const tabelBody = document.getElementById('tabelPesertaBody');
+    const targetTabelArea = document.getElementById('tabelPesertaBody');
     const infoKuotaContainer = document.getElementById('infoKuotaContainer');
     
     if (!Array.isArray(data)) return;
 
-    // Urutkan data berdasarkan tanggal paling terdahulu
-    data.sort((a, b) => {
-        let dateA = parseTanggalCustom(a.tanggal);
-        let dateB = parseTanggalCustom(b.tanggal);
-        return dateA - dateB;
-    });
-
     const countMap = {};
-    let htmlTabel = "";
-    
-    data.forEach((row, index) => {
+    const groupedData = {};
+
+    data.forEach((row) => {
         let rawTgl = row.tanggal ? row.tanggal.toString().trim() : "";
         let formattedTgl = formatTanggal(rawTgl);
 
         if (formattedTgl && formattedTgl !== '-') {
             countMap[formattedTgl] = (countMap[formattedTgl] || 0) + 1;
+            
+            if (!groupedData[formattedTgl]) {
+                groupedData[formattedTgl] = [];
+            }
+            groupedData[formattedTgl].push(row);
         }
-
-        let namaPeserta = row.nama ? row.nama.toString().toUpperCase() : '-';
-
-        htmlTabel += `<tr>
-            <td style="text-align: center; font-weight: 600; color: #5eead4;">${index + 1}</td>
-            <td style="font-weight: 700; color: #ffffff; letter-spacing: 0.3px;">${namaPeserta}</td>
-            <td style="color: #ccfbef;">${formattedTgl}</td>
-            <td style="color: #99f6e4;">${row.jam || '-'}</td>
-        </tr>`;
     });
 
-    if (data.length === 0) {
-        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #99f6e4;">Belum ada peserta terdaftar. 📭</td></tr>`;
+    let availableDates = [];
+    if (selectTanggalForm) {
+        selectTanggalForm.querySelectorAll('option').forEach(opt => {
+            if (opt.value) availableDates.push(opt.value);
+        });
     }
+
+    // Urutkan tanggal dari yang paling awal
+    availableDates.sort((a, b) => parseTanggalCustom(a) - parseTanggalCustom(b));
+
+    let htmlGroups = "";
     
-    if (tabelBody) {
-        tabelBody.innerHTML = htmlTabel;
+    if (availableDates.length === 0 && Object.keys(groupedData).length === 0) {
+        htmlGroups = `<p style="text-align: center; color: #99f6e4; padding: 15px;">Belum ada peserta terdaftar. 📭</p>`;
+    } else {
+        availableDates.forEach(tgl => {
+            let pesertaList = groupedData[tgl] || [];
+            
+            htmlGroups += `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #5eead4; margin: 15px 0 8px 0; font-size: 14px; border-bottom: 1px dashed rgba(153, 246, 228, 0.2); padding-bottom: 5px;">
+                        📅 ${tgl} (${pesertaList.length}/13)
+                    </h4>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px; text-align: center;">No</th>
+                                    <th>Nama</th>
+                                    <th style="width: 90px;">Jam</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+            
+            if (pesertaList.length === 0) {
+                htmlGroups += `<tr><td colspan="3" style="text-align: center; color: #94a3b8; padding: 10px; font-style: italic;">Belum ada peserta di tanggal ini</td></tr>`;
+            } else {
+                pesertaList.forEach((row, idx) => {
+                    let namaPeserta = row.nama ? row.nama.toString().toUpperCase() : '-';
+                    htmlGroups += `
+                        <tr>
+                            <td style="text-align: center; font-weight: 600; color: #5eead4;">${idx + 1}</td>
+                            <td style="font-weight: 700; color: #ffffff; letter-spacing: 0.3px;">${namaPeserta}</td>
+                            <td style="color: #99f6e4;">${row.jam || '-'}</td>
+                        </tr>`;
+                });
+            }
+
+            htmlGroups += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        });
+    }
+
+    if (targetTabelArea) {
+        let wrapperGroup = document.getElementById('groupedTableContainer');
+        if (!wrapperGroup) {
+            wrapperGroup = document.createElement('div');
+            wrapperGroup.id = 'groupedTableContainer';
+            let oldTable = targetTabelArea.closest('table');
+            if (oldTable) oldTable.style.display = 'none';
+            let resp = targetTabelArea.closest('.table-responsive');
+            if (resp && resp.parentNode) {
+                resp.parentNode.appendChild(wrapperGroup);
+            }
+        }
+        wrapperGroup.innerHTML = htmlGroups;
     }
 
     if (selectTanggalForm) {
@@ -122,7 +170,6 @@ window.handleKuotaData = function(data) {
             let tglValue = option.value;
             if (tglValue && tglValue !== "") {
                 let jumlahPendaftar = countMap[tglValue] || 0;
-                let sisaKuota = MAX_KUOTA - jumlahPendaftar;
                 
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
@@ -131,7 +178,6 @@ window.handleKuotaData = function(data) {
                 } else {
                     option.disabled = false;
                     option.text = tglValue + ` (${jumlahPendaftar}/${MAX_KUOTA})`;
-                    // Tulisan "Tersisa" dihilangkan, menyisakan nama tanggal dan format slot (contoh: 2/13)
                     infoHtml += `<li style="margin-bottom: 6px;">📅 ${tglValue}: <b>(${jumlahPendaftar}/${MAX_KUOTA})</b> ✅</li>`;
                 }
             }
