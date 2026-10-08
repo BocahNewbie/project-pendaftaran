@@ -19,7 +19,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     responseMessage.textContent = '';
 
     // Ganti dengan URL Web App Apps Script Anda yang aktif
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw34g7tWMu74yOMZd3BZ_Wix6qTODtd7q5G7ZfeneyOmlP3kODDSnYiTHExsbNKJZEWPQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz6q3TmmCbjMQ9SP5VhM_FlcoqcasNw3tNPt9B5PQ7SYTIshh-5tjKVqBp9folABcZE/exec';
 
     fetch(scriptURL, {
         method: 'POST',
