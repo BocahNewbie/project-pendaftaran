@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('popupModal').style.display = 'none';
         });
     }
+
+    // Paksa input teks menjadi huruf kapital secara otomatis saat diketik
+    const inputNama = document.getElementById('nama');
+    const inputAlamat = document.getElementById('alamat');
+    if (inputNama) inputNama.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
+    if (inputAlamat) inputAlamat.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
 });
 
 function loadDataKuota() {
@@ -24,7 +30,7 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
-// Helper untuk mengubah tanggal database menjadi format "30 Oktober 2026"
+// Helper untuk memperbaiki format tanggal agar tidak maju sehari akibat UTC
 function formatTanggal(tglStr) {
     if (!tglStr) return '-';
     let cleanStr = tglStr.toString().split('T')[0];
@@ -32,24 +38,23 @@ function formatTanggal(tglStr) {
     if (parts.length === 3) {
         let tahun = parts[0];
         let bulanIndex = parseInt(parts[1], 10) - 1;
-        let hari = parts[2];
+        let hari = parseInt(parts[2], 10); // Ambil angka hari murni tanpa konversi UTC
         const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         if (namaBulan[bulanIndex]) {
-            return `${parseInt(hari, 10)} ${namaBulan[bulanIndex]} ${tahun}`;
+            return `${hari} ${namaBulan[bulanIndex]} ${tahun}`;
         }
     }
     return tglStr;
 }
 
-// Helper untuk mengubah string tanggal menjadi objek Date agar bisa diurutkan dari yang paling awal
+// Helper untuk sorting tanggal dengan benar
 function parseTanggalCustom(tglStr) {
-    if (!tglStr) return new Date(8640000000000); // Taruh di akhir jika kosong
+    if (!tglStr) return new Date(8640000000000);
     let cleanStr = tglStr.toString().split('T')[0];
     let parts = cleanStr.split('-');
     if (parts.length === 3) {
         return new Date(parts[0], parts[1] - 1, parts[2]);
     }
-    // Jika formatnya sudah "30 Oktober 2026"
     let p2 = tglStr.split(' ');
     if (p2.length === 3) {
         let hari = parseInt(p2[0], 10);
@@ -71,7 +76,7 @@ window.handleKuotaData = function(data) {
     
     if (!Array.isArray(data)) return;
 
-    // Urutkan data peserta berdasarkan tanggal treatment paling terdahulu (ascending)
+    // Urutkan data berdasarkan tanggal paling terdahulu
     data.sort((a, b) => {
         let dateA = parseTanggalCustom(a.tanggal);
         let dateB = parseTanggalCustom(b.tanggal);
@@ -85,31 +90,31 @@ window.handleKuotaData = function(data) {
         let rawTgl = row.tanggal ? row.tanggal.toString().trim() : "";
         let formattedTgl = formatTanggal(rawTgl);
 
-        let cleanTglKey = formattedTgl;
-        if (cleanTglKey && cleanTglKey !== '-') {
-            countMap[cleanTglKey] = (countMap[cleanTglKey] || 0) + 1;
+        if (formattedTgl && formattedTgl !== '-') {
+            countMap[formattedTgl] = (countMap[formattedTgl] || 0) + 1;
         }
 
+        let namaPeserta = row.nama ? row.nama.toString().toUpperCase() : '-';
+
         htmlTabel += `<tr>
-            <td style="text-align: center; font-weight: 500; color: #475569;">${index + 1}</td>
-            <td style="font-weight: 600; color: #1e293b;">${row.nama || '-'}</td>
-            <td>${formattedTgl}</td>
-            <td style="color: #475569;">${row.jam || '-'}</td>
+            <td style="text-align: center; font-weight: 600; color: #5eead4;">${index + 1}</td>
+            <td style="font-weight: 700; color: #ffffff; letter-spacing: 0.3px;">${namaPeserta}</td>
+            <td style="color: #ccfbef;">${formattedTgl}</td>
+            <td style="color: #99f6e4;">${row.jam || '-'}</td>
         </tr>`;
     });
 
     if (data.length === 0) {
-        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #64748b;">Belum ada peserta terdaftar.</td></tr>`;
+        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #99f6e4;">Belum ada peserta terdaftar.</td></tr>`;
     }
     
     if (tabelBody) {
         tabelBody.innerHTML = htmlTabel;
     }
 
-    // Update opsi dropdown tanggal dan info kuota (diurutkan berdasarkan elemen option di HTML)
     if (selectTanggalForm) {
         const options = selectTanggalForm.querySelectorAll('option');
-        let infoHtml = "<b>Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0; color: #334155;'>";
+        let infoHtml = "<b>Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0;'>";
 
         options.forEach(option => {
             let tglValue = option.value;
@@ -120,7 +125,7 @@ window.handleKuotaData = function(data) {
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
                     option.text = tglValue + " (PENUH - 13/13)";
-                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: <span style="color: #dc2626; font-weight: bold;">Penuh (13/13)</span></li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (13/13)</span></li>`;
                 } else {
                     option.disabled = false;
                     option.text = tglValue + ` (${jumlahPendaftar}/13 - Sisa ${sisaKuota})`;
@@ -140,8 +145,8 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     e.preventDefault();
     
     const formData = {
-        nama: document.getElementById('nama').value,
-        alamat: document.getElementById('alamat').value,
+        nama: document.getElementById('nama').value.toUpperCase(),
+        alamat: document.getElementById('alamat').value.toUpperCase(),
         telepon: document.getElementById('telepon').value,
         tanggal: document.getElementById('tanggal').value,
         jam: document.getElementById('jam').value,
