@@ -41,6 +41,29 @@ function formatTanggal(tglStr) {
     return tglStr;
 }
 
+// Helper untuk mengubah string tanggal menjadi objek Date agar bisa diurutkan dari yang paling awal
+function parseTanggalCustom(tglStr) {
+    if (!tglStr) return new Date(8640000000000); // Taruh di akhir jika kosong
+    let cleanStr = tglStr.toString().split('T')[0];
+    let parts = cleanStr.split('-');
+    if (parts.length === 3) {
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    // Jika formatnya sudah "30 Oktober 2026"
+    let p2 = tglStr.split(' ');
+    if (p2.length === 3) {
+        let hari = parseInt(p2[0], 10);
+        let bulanNama = p2[1];
+        let tahun = parseInt(p2[2], 10);
+        const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        let bulanIndex = namaBulan.indexOf(bulanNama);
+        if (bulanIndex !== -1) {
+            return new Date(tahun, bulanIndex, hari);
+        }
+    }
+    return new Date(tglStr);
+}
+
 window.handleKuotaData = function(data) {
     const selectTanggalForm = document.getElementById('tanggal');
     const tabelBody = document.getElementById('tabelPesertaBody');
@@ -48,70 +71,48 @@ window.handleKuotaData = function(data) {
     
     if (!Array.isArray(data)) return;
 
+    // Urutkan data peserta berdasarkan tanggal treatment paling terdahulu (ascending)
+    data.sort((a, b) => {
+        let dateA = parseTanggalCustom(a.tanggal);
+        let dateB = parseTanggalCustom(b.tanggal);
+        return dateA - dateB;
+    });
+
     const countMap = {};
     let htmlTabel = "";
     
-    // Hitung jumlah pendaftar per tanggal dengan normalisasi string
     data.forEach((row, index) => {
         let rawTgl = row.tanggal ? row.tanggal.toString().trim() : "";
-        let formattedTgl = formatTanggal(rawTgl); // Menyamakan format agar cocok dengan dropdown
+        let formattedTgl = formatTanggal(rawTgl);
 
-        if (formattedTgl && formattedTgl !== '-') {
-            countMap[formattedTgl] = (countMap[formattedTgl] || 0) + 1;
+        let cleanTglKey = formattedTgl;
+        if (cleanTglKey && cleanTglKey !== '-') {
+            countMap[cleanTglKey] = (countMap[cleanTglKey] || 0) + 1;
         }
 
-        // Render baris tabel peserta dengan gaya modern langsung di JS (agar aman dari CSS luar)
-        htmlTabel += `<tr style="transition: background 0.2s;">
-            <td style="padding: 12px 14px; border-bottom: 1px solid #edf2f7; text-align: center; color: #4a5568; font-weight: 500;">${index + 1}</td>
-            <td style="padding: 12px 14px; border-bottom: 1px solid #edf2f7; font-weight: 600; color: #2d3748;">${row.nama || '-'}</td>
-            <td style="padding: 12px 14px; border-bottom: 1px solid #edf2f7; color: #4a5568;">${formattedTgl}</td>
-            <td style="padding: 12px 14px; border-bottom: 1px solid #edf2f7; color: #4a5568;">${row.jam || '-'}</td>
+        htmlTabel += `<tr>
+            <td style="text-align: center; font-weight: 500; color: #475569;">${index + 1}</td>
+            <td style="font-weight: 600; color: #1e293b;">${row.nama || '-'}</td>
+            <td>${formattedTgl}</td>
+            <td style="color: #475569;">${row.jam || '-'}</td>
         </tr>`;
     });
 
     if (data.length === 0) {
-        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #718096;">Belum ada peserta terdaftar.</td></tr>`;
+        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #64748b;">Belum ada peserta terdaftar.</td></tr>`;
     }
     
     if (tabelBody) {
         tabelBody.innerHTML = htmlTabel;
     }
 
-    // Paksa styling tabel agar tampil modern & elegan
-    const tableElement = tabelBody ? tabelBody.closest('table') : null;
-    if (tableElement) {
-        tableElement.style.width = '100%';
-        tableElement.style.borderCollapse = 'collapse';
-        tableElement.style.fontSize = '14px';
-        tableElement.style.backgroundColor = '#ffffff';
-        tableElement.style.borderRadius = '10px';
-        tableElement.style.overflow = 'hidden';
-        tableElement.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)';
-        
-        const thead = tableElement.querySelector('thead');
-        if (thead) {
-            thead.style.backgroundColor = '#f8fafc';
-            thead.style.color = '#475569';
-            const ths = thead.querySelectorAll('th');
-            ths.forEach(th => {
-                th.style.padding = '14px';
-                th.style.borderBottom = '2px solid #e2e8f0';
-                th.style.textAlign = 'left';
-                th.style.fontSize = '12px';
-                th.style.textTransform = 'uppercase';
-                th.style.letterSpacing = '0.5px';
-            });
-            if (ths[0]) ths[0].style.textAlign = 'center';
-        }
-    }
-
-    // Update opsi dropdown tanggal dan info kuota
+    // Update opsi dropdown tanggal dan info kuota (diurutkan berdasarkan elemen option di HTML)
     if (selectTanggalForm) {
         const options = selectTanggalForm.querySelectorAll('option');
-        let infoHtml = "<b>Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0; color: #4a5568;'>";
+        let infoHtml = "<b>Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0; color: #334155;'>";
 
         options.forEach(option => {
-            let tglValue = option.value; // Contoh: "30 Oktober 2026"
+            let tglValue = option.value;
             if (tglValue && tglValue !== "") {
                 let jumlahPendaftar = countMap[tglValue] || 0;
                 let sisaKuota = MAX_KUOTA - jumlahPendaftar;
@@ -119,11 +120,11 @@ window.handleKuotaData = function(data) {
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
                     option.text = tglValue + " (PENUH - 13/13)";
-                    infoHtml += `<li style="margin-bottom: 4px;">${tglValue}: <span style="color: #e53e3e; font-weight: bold;">Penuh (13/13)</span></li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: <span style="color: #dc2626; font-weight: bold;">Penuh (13/13)</span></li>`;
                 } else {
                     option.disabled = false;
                     option.text = tglValue + ` (${jumlahPendaftar}/13 - Sisa ${sisaKuota})`;
-                    infoHtml += `<li style="margin-bottom: 4px;">${tglValue}: Tersisa <b>${sisaKuota}</b> slot (${jumlahPendaftar}/13)</li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: Tersisa <b>${sisaKuota}</b> slot (${jumlahPendaftar}/13)</li>`;
                 }
             }
         });
