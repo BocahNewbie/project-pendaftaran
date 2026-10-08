@@ -5,13 +5,13 @@ function doPost(e) {
     var sheet = ss.getSheetByName("DATA");
     var data = sheet.getDataRange().getValues();
     
-    // Menangkap input sesuai kolom baru
+    // Menangkap input dari form
     var inputNama = dataInput.nama ? dataInput.nama.trim().toUpperCase() : "";
-    var inputAlamat = dataInput.alamat ? dataInput.alamat.trim() : "";
+    var inputAlamat = dataInput.alamat ? dataInput.alamat.trim().toUpperCase() : "";
     var inputTelepon = dataInput.telepon ? dataInput.telepon.trim() : "";
     var inputTanggal = dataInput.tanggal ? dataInput.tanggal.trim() : "";
     var inputJam = dataInput.jam ? dataInput.jam.trim() : "";
-    var inputKeterangan = dataInput.keterangan ? dataInput.keterangan.trim() : "Belum"; // Default Belum
+    var inputKeterangan = dataInput.keterangan ? dataInput.keterangan.trim() : "Belum";
 
     // Pengecekan Duplikasi Data (Berdasarkan Nama atau No WA)
     for (var i = 1; i < data.length; i++) {
@@ -31,8 +31,8 @@ function doPost(e) {
     // Format No WA agar tidak hilang angka nol di depannya pada Google Sheets
     var nomorTeleponFormat = "'" + inputTelepon;
 
-    // Urutan kolom yang disimpan ke Spreadsheet:
-    // [Timestamp, Nama, Alamat, No WA, Tanggal, Jam Treatment, Keterangan]
+    // Urutan kolom disesuaikan dengan header spreadsheet:
+    // Kolom A: Timestamp | Kolom B: Nama | Kolom C: Alamat | Kolom D: No WA | Kolom E: Tanggal | Kolom F: Jam Treatment | Kolom G: Keterangan
     sheet.appendRow([
       new Date(), 
       inputNama, 
