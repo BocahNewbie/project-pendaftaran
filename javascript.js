@@ -1,4 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycby5Ubq0U8cxUTo9Wk9f8Qz0jsZyX4aIDAQ-K9xz9eSvZlziExAd9Ws3diRclH_bYZZ61Q/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbymNzVYA71wpGjD4yKVRlpmwoO772hCpMoeSMaDFwkVU7ZrbHy0MT7wwc4I63OpVa0D_Q/exec';
 const MAX_KUOTA = 14;
 
 document.addEventListener("DOMContentLoaded", function() {
