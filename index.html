@@ -7,69 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-wrapper">
-        <!-- FORM PENDAFTARAN -->
-        <div class="container">
-            <h2>Pendaftaran Treatment</h2>
-            <form id="pendaftaranForm">
-                <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
-                </div>
-
-                <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap">
-                </div>
-
-                <div class="form-group">
-                    <label for="telepon">No WhatsApp</label>
-                    <input type="tel" id="telepon" name="telepon" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Treatment</label>
-                    <select id="tanggal" name="tanggal" required>
-                        <option value="" disabled selected>-- Pilih Tanggal Treatment --</option>
-                        <option value="30 Oktober 2026">30 Oktober 2026</option>
-                        <option value="31 Oktober 2026">31 Oktober 2026</option>
-                        <option value="1 November 2026">1 November 2026</option>
-                        <option value="2 November 2026">2 November 2026</option>
-                        <option value="3 November 2026">3 November 2026</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="jam">Jam Treatment (Keterangan)</label>
-                    <input type="text" id="jam" name="jam" required placeholder="Jam 10.00">
-                </div>
-
-                <div class="form-group">
-                    <label for="keterangan">Keterangan Pembayaran</label>
-                    <select id="keterangan" name="keterangan">
-                        <option value="Belum">Belum</option>
-                        <option value="Lunas">Lunas</option>
-                    </select>
-                </div>
-
-                <button type="submit" id="submitBtn">Daftar Sekarang</button>
-            </form>
-
-            <div class="credit">
-                Credit by <span>Bocah Newbie</span>
+    <div class="container">
+        <h2>Pendaftaran Treatment</h2>
+        <form id="pendaftaranForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
             </div>
 
-            <div id="loading" style="display:none; text-align:center; margin-top:10px; color: #00695c; font-weight:600;">Sedang memproses...</div>
-        </div>
+            <div class="form-group">
+                <label for="alamat">Alamat</label>
+                <input type="text" id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap">
+            </div>
 
-        <!-- PANEL DAFTAR PESERTA DI SAMPING -->
-        <div class="sidebar-peserta">
-            <h3>Daftar Peserta</h3>
-            <p class="subtitle-info">Maksimal 13 orang per tanggal</p>
-            
-            <div class="filter-container">
-                <label for="filterTanggal">Lihat Berdasarkan Tanggal:</label>
-                <select id="filterTanggal">
+            <div class="form-group">
+                <label for="telepon">No WhatsApp</label>
+                <input type="tel" id="telepon" name="telepon" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tanggal">Tanggal Treatment</label>
+                <select id="tanggal" name="tanggal" required>
+                    <option value="" disabled selected>-- Pilih Tanggal Treatment --</option>
                     <option value="30 Oktober 2026">30 Oktober 2026</option>
                     <option value="31 Oktober 2026">31 Oktober 2026</option>
                     <option value="1 November 2026">1 November 2026</option>
@@ -78,14 +37,28 @@
                 </select>
             </div>
 
-            <div class="kuota-badge" id="kuotaBadge">Sisa Kuota: Menghitung...</div>
-
-            <div class="list-peserta-box">
-                <ul id="listPeserta">
-                    <li>Memuat data peserta...</li>
-                </ul>
+            <div class="form-group">
+                <label for="jam">Jam Treatment (Keterangan)</label>
+                <input type="text" id="jam" name="jam" required placeholder="Jam 10.00">
             </div>
+
+            <div class="form-group">
+                <label for="keterangan">Keterangan Pembayaran</label>
+                <select id="keterangan" name="keterangan">
+                    <option value="Belum">Belum</option>
+                    <option value="Lunas">Lunas</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submitBtn">Daftar Sekarang</button>
+        </form>
+
+        <div class="credit">
+            Credit by <span>Bocah Newbie</span>
         </div>
+
+        <div id="loading" style="display:none; text-align:center; margin-top:10px; color: #00695c; font-weight:600;">Sedang memproses...</div>
+        <div id="responseMessage" style="text-align:center; margin-top:10px;"></div>
     </div>
 
     <!-- MODAL POPUP NOTIFIKASI BERHASIL -->
