@@ -25,17 +25,21 @@
                 <input type="tel" id="telepon" name="telepon" required placeholder="Contoh: 08123456789">
             </div>
 
-            <!-- Bagian Tanggal dan Jam Sejajar -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Treatment</label>
-                    <input type="date" id="tanggal" name="tanggal" required>
-                </div>
+            <div class="form-group">
+                <label for="tanggal">Tanggal Treatment</label>
+                <select id="tanggal" name="tanggal" required>
+                    <option value="" disabled selected>-- Pilih Tanggal Treatment --</option>
+                    <option value="30 Oktober 2026">30 Oktober 2026</option>
+                    <option value="31 Oktober 2026">31 Oktober 2026</option>
+                    <option value="1 November 2026">1 November 2026</option>
+                    <option value="2 November 2026">2 November 2026</option>
+                    <option value="3 November 2026">3 November 2026</option>
+                </select>
+            </div>
 
-                <div class="form-group">
-                    <label for="jam">Jam Treatment</label>
-                    <input type="time" id="jam" name="jam" required>
-                </div>
+            <div class="form-group">
+                <label for="jam">Jam Treatment (Keterangan)</label>
+                <input type="text" id="jam" name="jam" required placeholder="Contoh: Sesi Pagi / Jam 10.00">
             </div>
 
             <div class="form-group">
@@ -48,8 +52,14 @@
 
             <button type="submit" id="submitBtn">Daftar Sekarang</button>
         </form>
-        <div id="loading" style="display:none;">Sedang memproses...</div>
-        <div id="responseMessage"></div>
+
+        <!-- Credit by Bocah Newbie di bawah form -->
+        <div class="credit">
+            Credit by <span>Bocah Newbie</span>
+        </div>
+
+        <div id="loading" style="display:none; text-align:center; margin-top:10px;">Sedang memproses...</div>
+        <div id="responseMessage" style="text-align:center; margin-top:10px;"></div>
     </div>
 
     <script src="javascript.js"></script>
