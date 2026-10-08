@@ -67,6 +67,24 @@ function parseTanggalCustom(tglStr) {
     return new Date(tglStr);
 }
 
+// Helper untuk mengubah string jam (misal: "08.30" atau "Jam 10.00") menjadi angka menit untuk sorting
+function parseJamToMinutes(jamStr) {
+    if (!jamStr) return 9999;
+    let clean = jamStr.toString().toLowerCase().replace(/jam/g, '').trim();
+    clean = clean.replace('.', ':').replace(',', ':');
+    let parts = clean.split(':');
+    if (parts.length === 2) {
+        let h = parseInt(parts[0], 10) || 0;
+        let m = parseInt(parts[1], 10) || 0;
+        return (h * 60) + m;
+    }
+    let singleNum = parseInt(clean, 10);
+    if (!isNaN(singleNum)) {
+        return singleNum * 60;
+    }
+    return 9999;
+}
+
 window.handleKuotaData = function(data) {
     const selectTanggalForm = document.getElementById('tanggal');
     const targetTabelArea = document.getElementById('tabelPesertaBody');
@@ -108,6 +126,14 @@ window.handleKuotaData = function(data) {
     } else {
         availableDates.forEach(tgl => {
             let pesertaList = groupedData[tgl] || [];
+            
+            // Urutkan peserta berdasarkan jam mulai dari yang paling rendah (pagi ke malam)
+            pesertaList.sort((a, b) => {
+                let timeA = parseJamToMinutes(a.jam);
+                let timeB = parseJamToMinutes(b.jam);
+                return timeA - timeB;
+            });
+
             let jumlahPendaftar = countMap[tgl] || 0;
             let statusBadge = jumlahPendaftar >= MAX_KUOTA ? `<span style="color: #f87171;">(Penuh 13/13 🚫)</span>` : `<span style="color: #5eead4;">(${jumlahPendaftar}/${MAX_KUOTA}) ✅</span>`;
             
@@ -117,9 +143,10 @@ window.handleKuotaData = function(data) {
                         <span>📅 ${tgl}</span> 
                         <span>${statusBadge}</span>
                     </h4>
-                    <div class="table-responsive">
+                    <!-- Ditambahkan max-height dan overflow-y: auto agar tabel bisa di-scroll -->
+                    <div class="table-responsive" style="max-height: 220px; overflow-y: auto; border-radius: 10px;">
                         <table>
-                            <thead>
+                            <thead style="position: sticky; top: 0; z-index: 1;">
                                 <tr>
                                     <th style="width: 40px; text-align: center;">No</th>
                                     <th>Nama</th>
@@ -165,7 +192,6 @@ window.handleKuotaData = function(data) {
         wrapperGroup.innerHTML = htmlGroups;
     }
 
-    // Kosongkan infoKuotaContainer agar bagian atas tidak duplikat / boros tempat
     if (infoKuotaContainer) {
         infoKuotaContainer.innerHTML = "";
     }
