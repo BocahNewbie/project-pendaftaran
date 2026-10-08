@@ -4,8 +4,8 @@ let globalDataPeserta = [];
 
 // Fungsi untuk menentukan kuota maksimal berdasarkan tanggal
 function getKuotaMaksimal(tanggalStr) {
-    if (tanggalStr && tanggalStr.includes("30 Oktober 2026")) {
-        return 6; // Kuota khusus tanggal 30 Oktober 2026 adalah 6 orang
+    if (tanggalStr && tanggalStr.includes("30 Oktober")) {
+        return 6; // Kuota khusus tanggal 30 Oktober adalah 6 orang
     }
     return 13; // Kuota default tanggal lainnya adalah 13 orang
 }
@@ -21,7 +21,9 @@ function loadDataKuota() {
             data.forEach(row => {
                 let tgl = row.tanggal;
                 if (tgl) {
-                    countMap[tgl] = (countMap[tgl] || 0) + 1;
+                    // Normalisasi string tanggal untuk pencocokan yang akurat
+                    let cleanTgl = tgl.trim();
+                    countMap[cleanTgl] = (countMap[cleanTgl] || 0) + 1;
                 }
             });
 
@@ -74,7 +76,7 @@ function updateJamTerpakai() {
     if (!selectedTanggal) return;
 
     // Filter peserta berdasarkan tanggal
-    const pesertaDiTanggalIni = globalDataPeserta.filter(item => item.tanggal === selectedTanggal);
+    const pesertaDiTanggalIni = globalDataPeserta.filter(item => item.tanggal && item.tanggal.trim() === selectedTanggal.trim());
     const jamTerpakai = pesertaDiTanggalIni.map(item => item.jam);
 
     // Matikan opsi jam yang sudah terisi
@@ -108,7 +110,7 @@ function renderDaftarPeserta(data) {
         if (!tglValue || tglValue === "") return;
 
         let maxKuota = getKuotaMaksimal(tglValue);
-        let pesertaTanggal = data.filter(item => item.tanggal === tglValue);
+        let pesertaTanggal = data.filter(item => item.tanggal && item.tanggal.trim() === tglValue.trim());
         let jumlah = pesertaTanggal.length;
         let isPenuh = jumlah >= maxKuota;
 
