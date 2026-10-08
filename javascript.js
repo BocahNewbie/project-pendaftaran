@@ -21,7 +21,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     responseMessage.textContent = '';
 
     // Ganti URL di bawah dengan URL Deployment Web App Google Apps Script Anda
-    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw34g7tWMu74yOMZd3BZ_Wix6qTODtd7q5G7ZfeneyOmlP3kODDSnYiTHExsbNKJZEWPQ/exec';
 
     fetch(scriptURL, {
         method: 'POST',
