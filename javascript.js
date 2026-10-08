@@ -30,15 +30,16 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
-// Helper untuk memperbaiki format tanggal agar tidak maju sehari akibat UTC
+// Helper untuk memformat tanggal persis seperti di database tanpa geser zona waktu UTC
 function formatTanggal(tglStr) {
     if (!tglStr) return '-';
+    // Ambil bagian YYYY-MM-DD saja
     let cleanStr = tglStr.toString().split('T')[0];
     let parts = cleanStr.split('-');
     if (parts.length === 3) {
         let tahun = parts[0];
         let bulanIndex = parseInt(parts[1], 10) - 1;
-        let hari = parseInt(parts[2], 10); // Ambil angka hari murni tanpa konversi UTC
+        let hari = parseInt(parts[2], 10);
         const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
         if (namaBulan[bulanIndex]) {
             return `${hari} ${namaBulan[bulanIndex]} ${tahun}`;
@@ -47,13 +48,14 @@ function formatTanggal(tglStr) {
     return tglStr;
 }
 
-// Helper untuk sorting tanggal dengan benar
+// Helper untuk sorting tanggal dengan akurat tanpa terpengaruh UTC
 function parseTanggalCustom(tglStr) {
     if (!tglStr) return new Date(8640000000000);
     let cleanStr = tglStr.toString().split('T')[0];
     let parts = cleanStr.split('-');
     if (parts.length === 3) {
-        return new Date(parts[0], parts[1] - 1, parts[2]);
+        // Buat objek Date menggunakan waktu lokal (00:00:00)
+        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
     }
     let p2 = tglStr.split(' ');
     if (p2.length === 3) {
