@@ -54,10 +54,14 @@
                 </select>
 
                 <button type="submit" id="submitBtn">Daftar Sekarang!</button>
-                <div id="loading" style="display:none; text-align:center; margin-top:10px; color:#d4af37;">Sedang Memproses...</div>
-            </form>
-            <div class="credit">Credit by <span>BOCAH NEWBIE</span></div>
-        </div>
+
+<!-- Progress Bar Loading -->
+<div id="loadingContainer" style="display:none; margin-top: 15px;">
+    <div class="progress-bar-track">
+        <div class="progress-bar-fill"></div>
+    </div>
+    <div id="loadingText" style="text-align:center; margin-top:6px; font-size:13px; color:#d4af37;">Sedang Memproses...</div>
+</div>
 
         <!-- Kotak Status Kuota & Daftar Peserta Realtime -->
         <div class="card-container">
