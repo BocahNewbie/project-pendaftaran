@@ -1,5 +1,5 @@
 // Ganti URL di bawah dengan URL Deployment Web App Google Apps Script Anda yang aktif
-const scriptURL = 'YOUR_WEB_APP_URL_HERE'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxphZOJUP-Sc5UwRkTELxjrjoxQF_qc7IuuwRnygEVcQvJnL1pl0xmW-mzI5ojYRqcDJg/exec'; 
 const MAX_KUOTA = 14;
 
 document.addEventListener("DOMContentLoaded", function() {
