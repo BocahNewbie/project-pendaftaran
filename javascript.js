@@ -108,11 +108,14 @@ window.handleKuotaData = function(data) {
     } else {
         availableDates.forEach(tgl => {
             let pesertaList = groupedData[tgl] || [];
+            let jumlahPendaftar = countMap[tgl] || 0;
+            let statusBadge = jumlahPendaftar >= MAX_KUOTA ? `<span style="color: #f87171;">(Penuh 13/13 🚫)</span>` : `<span style="color: #5eead4;">(${jumlahPendaftar}/${MAX_KUOTA}) ✅</span>`;
             
             htmlGroups += `
                 <div style="margin-bottom: 20px;">
-                    <h4 style="color: #5eead4; margin: 15px 0 8px 0; font-size: 14px; border-bottom: 1px dashed rgba(153, 246, 228, 0.2); padding-bottom: 5px;">
-                        📅 ${tgl} (${pesertaList.length}/13)
+                    <h4 style="color: #5eead4; margin: 15px 0 8px 0; font-size: 14px; border-bottom: 1px dashed rgba(153, 246, 228, 0.2); padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>📅 ${tgl}</span> 
+                        <span>${statusBadge}</span>
                     </h4>
                     <div class="table-responsive">
                         <table>
@@ -162,31 +165,26 @@ window.handleKuotaData = function(data) {
         wrapperGroup.innerHTML = htmlGroups;
     }
 
+    // Kosongkan infoKuotaContainer agar bagian atas tidak duplikat / boros tempat
+    if (infoKuotaContainer) {
+        infoKuotaContainer.innerHTML = "";
+    }
+
     if (selectTanggalForm) {
         const options = selectTanggalForm.querySelectorAll('option');
-        let infoHtml = "<b>📊 Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0;'>";
-
         options.forEach(option => {
             let tglValue = option.value;
             if (tglValue && tglValue !== "") {
                 let jumlahPendaftar = countMap[tglValue] || 0;
-                
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
                     option.text = tglValue + " (PENUH - 13/13)";
-                    infoHtml += `<li style="margin-bottom: 6px;">✨ ${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (${jumlahPendaftar}/${MAX_KUOTA}) 🚫</span></li>`;
                 } else {
                     option.disabled = false;
                     option.text = tglValue + ` (${jumlahPendaftar}/${MAX_KUOTA})`;
-                    infoHtml += `<li style="margin-bottom: 6px;">📅 ${tglValue}: <b>(${jumlahPendaftar}/${MAX_KUOTA})</b> ✅</li>`;
                 }
             }
         });
-        infoHtml += "</ul>";
-        
-        if (infoKuotaContainer) {
-            infoKuotaContainer.innerHTML = infoHtml;
-        }
     }
 };
 
