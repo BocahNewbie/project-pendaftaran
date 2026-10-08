@@ -1,23 +1,22 @@
-// Ganti URL di bawah dengan URL Deployment Web App Google Apps Script Anda yang aktif
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxphZOJUP-Sc5UwRkTELxjrjoxQF_qc7IuuwRnygEVcQvJnL1pl0xmW-mzI5ojYRqcDJg/exec'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyPte84c-av-IYfshpnDGG4Z1Jq_mrWAem9vngwCoc3H6QOtctZOiu432TkABjm1RhtaQ/exec';
 const MAX_KUOTA = 14;
 
 document.addEventListener("DOMContentLoaded", function() {
     loadDataPeserta();
-    
     document.getElementById('filterTanggal').addEventListener('change', renderPesertaDanKuota);
 });
 
-// Mengambil data dari Google Sheets (menggunakan metode GET dari Apps Script / Web App URL yang sama)
+// Mengambil data dari Google Sheets via GET
 function loadDataPeserta() {
     fetch(scriptURL)
     .then(response => response.json())
     .then(data => {
-        window.allDataPeserta = data; // Simpan data global
+        window.allDataPeserta = data; 
         updateOpsiTanggalDanUI(data);
     })
     .catch(error => {
         console.log("Gagal memuat data peserta:", error);
+        document.getElementById('listPeserta').innerHTML = "<li>Gagal memuat data.</li>";
     });
 }
 
@@ -26,7 +25,6 @@ function updateOpsiTanggalDanUI(data) {
     const selectTanggalForm = document.getElementById('tanggal');
     const options = selectTanggalForm.querySelectorAll('option');
 
-    // Hitung jumlah pendaftar per tanggal
     const countMap = {};
     if (Array.isArray(data)) {
         data.forEach(row => {
@@ -37,7 +35,6 @@ function updateOpsiTanggalDanUI(data) {
         });
     }
 
-    // Cek kuota untuk setiap tanggal di form
     options.forEach(option => {
         let tglValue = option.value;
         if (tglValue && tglValue !== "") {
@@ -55,7 +52,7 @@ function updateOpsiTanggalDanUI(data) {
     renderPesertaDanKuota();
 }
 
-// Menampilkan list peserta sesuai filter tanggal yang dipilih di sidebar
+// Menampilkan list peserta (Hanya Nama dan Jam saja)
 function renderPesertaDanKuota() {
     const filterTgl = document.getElementById('filterTanggal').value;
     const listContainer = document.getElementById('listPeserta');
@@ -78,7 +75,8 @@ function renderPesertaDanKuota() {
 
     pesertaList.forEach((p, index) => {
         let li = document.createElement('li');
-        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.keterangan || 'Belum'}</b>`;
+        // Menampilkan Nama dan Jam Treatment
+        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.jam || '-'}</b>`;
         listContainer.appendChild(li);
     });
 }
