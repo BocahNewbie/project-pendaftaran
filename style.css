@@ -6,8 +6,17 @@
 }
 
 body {
-    background: linear-gradient(135deg, #4db6ac 0%, #00897b 50%, #80deea 100%);
+    /* Menggabungkan gradasi hijau toska Wardah dengan pola background estetik berulang */
+    background-color: #00897b;
+    background-image: 
+        linear-gradient(rgba(0, 137, 123, 0.85), rgba(0, 77, 64, 0.9)), 
+        url('https://postimg.cc/RNHfcvZz');
+    
+    /* Membuat gambar berulang memenuhi seluruh layar */
+    background-repeat: repeat;
+    background-size: 250px; /* Ukuran pola gambar (bisa dikecilkan/diberbesar agar estetik) */
     background-attachment: fixed;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,9 +31,10 @@ body {
     padding: 35px 30px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.3);
     width: 100%;
     max-width: 450px;
+    z-index: 10;
 }
 
 h2 {
@@ -114,7 +124,7 @@ button:disabled {
     text-transform: uppercase;
 }
 
-/* --- STYLE POPUP MODAL NOTIFIKASI (Z-Index Tinggi & Interaktif) --- */
+/* --- STYLE POPUP MODAL NOTIFIKASI --- */
 .modal-overlay {
     position: fixed;
     top: 0;
