@@ -1,3 +1,89 @@
+// Ganti URL di bawah dengan URL Deployment Web App Google Apps Script Anda yang aktif
+const scriptURL = 'YOUR_WEB_APP_URL_HERE'; 
+const MAX_KUOTA = 14;
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadDataPeserta();
+    
+    document.getElementById('filterTanggal').addEventListener('change', renderPesertaDanKuota);
+});
+
+// Mengambil data dari Google Sheets (menggunakan metode GET dari Apps Script / Web App URL yang sama)
+function loadDataPeserta() {
+    fetch(scriptURL)
+    .then(response => response.json())
+    .then(data => {
+        window.allDataPeserta = data; // Simpan data global
+        updateOpsiTanggalDanUI(data);
+    })
+    .catch(error => {
+        console.log("Gagal memuat data peserta:", error);
+    });
+}
+
+// Memperbarui status kuota & opsi tanggal yang penuh
+function updateOpsiTanggalDanUI(data) {
+    const selectTanggalForm = document.getElementById('tanggal');
+    const options = selectTanggalForm.querySelectorAll('option');
+
+    // Hitung jumlah pendaftar per tanggal
+    const countMap = {};
+    if (Array.isArray(data)) {
+        data.forEach(row => {
+            let tgl = row.tanggal;
+            if (tgl) {
+                countMap[tgl] = (countMap[tgl] || 0) + 1;
+            }
+        });
+    }
+
+    // Cek kuota untuk setiap tanggal di form
+    options.forEach(option => {
+        let tglValue = option.value;
+        if (tglValue && tglValue !== "") {
+            let jumlahPendaftar = countMap[tglValue] || 0;
+            if (jumlahPendaftar >= MAX_KUOTA) {
+                option.disabled = true;
+                option.text = tglValue + " (PENUH - 14/14)";
+            } else {
+                option.disabled = false;
+                option.text = tglValue + ` (${jumlahPendaftar}/14)`;
+            }
+        }
+    });
+
+    renderPesertaDanKuota();
+}
+
+// Menampilkan list peserta sesuai filter tanggal yang dipilih di sidebar
+function renderPesertaDanKuota() {
+    const filterTgl = document.getElementById('filterTanggal').value;
+    const listContainer = document.getElementById('listPeserta');
+    const kuotaBadge = document.getElementById('kuotaBadge');
+    
+    listContainer.innerHTML = "";
+    
+    let pesertaList = [];
+    if (window.allDataPeserta && Array.isArray(window.allDataPeserta)) {
+        pesertaList = window.allDataPeserta.filter(row => row.tanggal === filterTgl);
+    }
+
+    let sisaKuota = MAX_KUOTA - pesertaList.length;
+    kuotaBadge.textContent = `Terisi: ${pesertaList.length}/${MAX_KUOTA} | Sisa Kuota: ${sisaKuota > 0 ? sisaKuota : 0}`;
+
+    if (pesertaList.length === 0) {
+        listContainer.innerHTML = "<li>Belum ada peserta di tanggal ini.</li>";
+        return;
+    }
+
+    pesertaList.forEach((p, index) => {
+        let li = document.createElement('li');
+        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.keterangan || 'Belum'}</b>`;
+        listContainer.appendChild(li);
+    });
+}
+
+// Event Submit Form Pendaftaran
 document.getElementById('pendaftaranForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -18,9 +104,6 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     loadingDiv.style.display = 'block';
     responseMessage.textContent = '';
 
-    // Ganti dengan URL Web App Apps Script Anda yang aktif
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz6q3TmmCbjMQ9SP5VhM_FlcoqcasNw3tNPt9B5PQ7SYTIshh-5tjKVqBp9folABcZE/exec';
-
     fetch(scriptURL, {
         method: 'POST',
         mode: 'no-cors',
@@ -38,6 +121,9 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         responseMessage.textContent = 'Pendaftaran berhasil dikirim!';
         
         document.getElementById('pendaftaranForm').reset();
+        
+        // Refresh data setelah submit berhasil
+        setTimeout(loadDataPeserta, 1500);
     })
     .catch(error => {
         loadingDiv.style.display = 'none';
