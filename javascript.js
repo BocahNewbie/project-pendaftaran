@@ -24,6 +24,24 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
+// Fungsi helper untuk merapikan format tanggal
+function formatTanggal(tglStr) {
+    if (!tglStr) return '-';
+    // Jika formatnya ISO / ada huruf T, ambil bagian tanggalnya saja
+    let cleanStr = tglStr.toString().split('T')[0];
+    let parts = cleanStr.split('-');
+    if (parts.length === 3) {
+        let tahun = parts[0];
+        let bulanIndex = parseInt(parts[1], 10) - 1;
+        let hari = parts[2];
+        const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        if (namaBulan[bulanIndex]) {
+            return `${parseInt(hari, 10)} ${namaBulan[bulanIndex]} ${tahun}`;
+        }
+    }
+    return tglStr;
+}
+
 window.handleKuotaData = function(data) {
     const selectTanggalForm = document.getElementById('tanggal');
     const tabelBody = document.getElementById('tabelPesertaBody');
@@ -36,26 +54,56 @@ window.handleKuotaData = function(data) {
     
     // Hitung jumlah pendaftar per tanggal & susun baris tabel peserta
     data.forEach((row, index) => {
-        let tgl = row.tanggal ? row.tanggal.toString().trim() : "";
-        if (tgl) {
-            countMap[tgl] = (countMap[tgl] || 0) + 1;
+        let tglRaw = row.tanggal ? row.tanggal.toString().trim() : "";
+        let tglClean = tglRaw.split('T')[0];
+        if (tglClean) {
+            countMap[tglClean] = (countMap[tglClean] || 0) + 1;
         }
 
-        htmlTabel += `<tr>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${index + 1}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${row.nama || '-'}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${row.tanggal || '-'}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${row.jam || '-'}</td>
-            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${row.keterangan || '-'}</td>
+        let tanggalFormatted = formatTanggal(row.tanggal);
+
+        htmlTabel += `<tr style="transition: background 0.2s;">
+            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2f7; text-align: center; color: #4a5568;">${index + 1}</td>
+            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2f7; font-weight: 500; color: #2d3748;">${row.nama || '-'}</td>
+            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2f7; color: #4a5568;">${tanggalFormatted}</td>
+            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2f7; color: #4a5568;">${row.jam || '-'}</td>
         </tr>`;
     });
 
     if (data.length === 0) {
-        htmlTabel = `<tr><td colspan="5" style="text-align: center; padding: 15px;">Belum ada peserta terdaftar.</td></tr>`;
+        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 20px; color: #718096;">Belum ada peserta terdaftar.</td></tr>`;
     }
     
     if (tabelBody) {
+        // Bungkus tabel dengan gaya modern yang bersih
         tabelBody.innerHTML = htmlTabel;
+    }
+
+    // Terapkan styling wrapper tabel agar terlihat rapi dan elegan
+    const tableElement = tabelBody ? tabelBody.closest('table') : null;
+    if (tableElement) {
+        tableElement.style.width = '100%';
+        tableElement.style.borderCollapse = 'collapse';
+        tableElement.style.fontSize = '13px';
+        tableElement.style.backgroundColor = '#ffffff';
+        tableElement.style.borderRadius = '8px';
+        tableElement.style.overflow = 'hidden';
+        tableElement.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+        
+        // Styling Header Tabel
+        const thead = tableElement.querySelector('thead');
+        if (thead) {
+            thead.style.backgroundColor = '#f7fafc';
+            thead.style.color = '#4a5568';
+            thead.style.textTransform = 'uppercase';
+            thead.style.fontSize = '11px';
+            thead.style.letterSpacing = '0.5px';
+            const ths = thead.querySelectorAll('th');
+            ths.forEach(th => {
+                th.style.padding = '12px';
+                th.style.borderBottom = '2px solid #e2e8f0';
+            });
+        }
     }
 
     // Update opsi dropdown tanggal dan info kuota
@@ -125,7 +173,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         }
         
         document.getElementById('pendaftaranForm').reset();
-        setTimeout(loadDataKuota, 1500); // Refresh data realtime setelah daftar
+        setTimeout(loadDataKuota, 1500); 
     })
     .catch(error => {
         loadingDiv.style.display = 'none';
