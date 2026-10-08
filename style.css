@@ -1,14 +1,14 @@
 :root {
     --bg-primary: #0f2d2b;
-    --card-bg: rgba(16, 52, 50, 0.45); /* Transparan 40% dengan nuansa mint-turquoise */
-    --border-glass: rgba(153, 246, 228, 0.25);
-    --text-main: #f0fdf4; /* Putih mint terang agar sangat jelas dibaca */
-    --text-muted: #99f6e4; /* Mint pastel lembut untuk label */
-    --input-bg: rgba(13, 40, 38, 0.5);
+    --card-bg: rgba(13, 40, 38, 0.75); /* Ditingkatkan kepadatannya agar kontras lebih tinggi */
+    --border-glass: rgba(153, 246, 228, 0.3);
+    --text-main: #ffffff; /* Putih bersih agar sangat jelas */
+    --text-muted: #99f6e4;
+    --input-bg: rgba(10, 31, 29, 0.8);
 }
 
 body {
-    background: linear-gradient(135deg, #0d2624 0%, #134e4a 100%); /* Gradasi mint gelap & turquoise lembut */
+    background: linear-gradient(135deg, #091c1a 0%, #11423e 100%);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--text-main);
     min-height: 100vh;
@@ -19,7 +19,6 @@ body {
     align-items: center;
 }
 
-/* Wrapper utama */
 .page-wrapper {
     display: flex;
     gap: 30px;
@@ -30,14 +29,13 @@ body {
     align-items: flex-start;
 }
 
-/* Container Transparan 40% dengan efek kaca halus */
 .card-container {
     background: var(--card-bg);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border-glass);
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     padding: 30px;
     flex: 1;
     min-width: 320px;
@@ -46,7 +44,7 @@ body {
 }
 
 h2, h3 {
-    color: #ccfbef;
+    color: #5eead4;
     font-weight: 600;
     font-size: 17px;
     letter-spacing: -0.3px;
@@ -57,15 +55,16 @@ h2, h3 {
     padding-bottom: 12px;
 }
 
-/* Styling Input & Select */
+/* Otomatis teks input menjadi Huruf Kapital (Uppercase) */
 input, select, textarea {
     width: 100%;
     background: var(--input-bg);
     border: 1px solid var(--border-glass);
     border-radius: 12px;
     padding: 12px 16px;
-    color: #ffffff; /* Teks input putih terang */
+    color: #ffffff;
     font-size: 14px;
+    text-transform: uppercase; 
     margin-top: 5px;
     margin-bottom: 15px;
     box-sizing: border-box;
@@ -73,15 +72,16 @@ input, select, textarea {
 }
 
 input::placeholder, textarea::placeholder {
-    color: #5eead4; /* Placeholder warna mint terang */
+    color: #5eead4;
     opacity: 0.7;
+    text-transform: none; /* Placeholder tetap normal */
 }
 
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: #5eead4;
-    box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.2);
-    background: rgba(19, 78, 74, 0.7);
+    box-shadow: 0 0 0 4px rgba(94, 234, 212, 0.25);
+    background: rgba(15, 48, 45, 0.9);
 }
 
 label {
@@ -91,13 +91,12 @@ label {
     letter-spacing: 0.3px;
 }
 
-/* Tombol Daftar Sekarang senada dengan background utama */
 button, #submitBtn {
     background: linear-gradient(135deg, #0d2624 0%, #134e4a 100%);
-    color: #f0fdf4;
+    color: #ffffff;
     font-weight: 600;
     padding: 14px;
-    border: 1px solid rgba(153, 246, 228, 0.3);
+    border: 1px solid rgba(153, 246, 228, 0.4);
     border-radius: 12px;
     width: 100%;
     cursor: pointer;
@@ -110,12 +109,11 @@ button, #submitBtn {
 
 button:hover, #submitBtn:hover {
     background: linear-gradient(135deg, #134e4a 0%, #0f766e 100%);
-    border-color: rgba(153, 246, 228, 0.6);
+    border-color: rgba(153, 246, 228, 0.8);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(94, 234, 212, 0.2);
+    box-shadow: 0 6px 20px rgba(94, 234, 212, 0.3);
 }
 
-/* Info Sisa Kuota */
 #infoKuotaContainer ul {
     list-style: none;
     padding: 0;
@@ -123,7 +121,7 @@ button:hover, #submitBtn:hover {
 }
 
 #infoKuotaContainer li {
-    background: rgba(19, 78, 74, 0.3);
+    background: rgba(19, 78, 74, 0.6);
     border: 1px solid var(--border-glass);
     padding: 10px 14px;
     border-radius: 10px;
@@ -132,10 +130,10 @@ button:hover, #submitBtn:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #ccfbef;
+    color: #ffffff;
+    font-weight: 500;
 }
 
-/* Tabel Peserta */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -145,14 +143,14 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: rgba(19, 78, 74, 0.25);
+    background: rgba(15, 48, 45, 0.6);
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--border-glass);
 }
 
 th {
-    background: rgba(19, 78, 74, 0.7);
+    background: rgba(19, 78, 74, 0.9);
     color: #5eead4;
     font-size: 11px;
     text-transform: uppercase;
@@ -167,10 +165,12 @@ th:first-child, td:first-child {
     width: 40px;
 }
 
+/* Nama peserta dibuat sangat terang & jelas (bold putih) */
 td {
     padding: 12px 10px;
     font-size: 13px;
-    color: #f0fdf4; /* Teks isi tabel putih terang */
+    color: #ffffff;
+    font-weight: 500;
     border-bottom: 1px solid var(--border-glass);
 }
 
@@ -179,10 +179,9 @@ tr:last-child td {
 }
 
 tr:hover td {
-    background: rgba(153, 246, 228, 0.08);
+    background: rgba(153, 246, 228, 0.15);
 }
 
-/* Credit berwarna biru lembayung ungu */
 .credit {
     text-align: center;
     font-size: 12px;
@@ -192,14 +191,13 @@ tr:hover td {
     letter-spacing: 0.5px;
 }
 
-/* Styling Popup Modal Modern */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(13, 38, 36, 0.8);
+    background: rgba(9, 28, 26, 0.85);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: flex;
@@ -211,13 +209,13 @@ tr:hover td {
 .modal-card {
     background: rgba(19, 78, 74, 0.95);
     backdrop-filter: blur(16px);
-    border: 1px solid rgba(153, 246, 228, 0.3);
+    border: 1px solid rgba(153, 246, 228, 0.4);
     padding: 35px 30px;
     border-radius: 20px;
     text-align: center;
     max-width: 380px;
     width: 90%;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 .modal-icon {
@@ -226,7 +224,7 @@ tr:hover td {
 }
 
 .modal-card h3 {
-    color: #f0fdf4;
+    color: #ffffff;
     margin: 0 0 10px 0;
     font-size: 20px;
     border: none;
@@ -234,7 +232,7 @@ tr:hover td {
 }
 
 .modal-card p {
-    color: #99f6e4;
+    color: #ccfbef;
     font-size: 14px;
     margin-bottom: 25px;
     line-height: 1.5;
@@ -251,7 +249,7 @@ tr:hover td {
     width: 100%;
     font-size: 14px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(94, 234, 212, 0.3);
+    box-shadow: 0 4px 12px rgba(94, 234, 212, 0.4);
 }
 
 .modal-btn:hover {
