@@ -46,7 +46,7 @@ function loadDataKuota() {
                 });
             }
 
-            // Render ulang tabel rekap peserta per tanggal
+            // Render ulang tabel rekap peserta terpisah per tanggal
             renderDaftarPeserta(data);
             
             // Perbarui jam terpakai sesuai tanggal yang dipilih
@@ -92,35 +92,11 @@ if (inputTanggal) {
     inputTanggal.addEventListener('change', updateJamTerpakai);
 }
 
-// 3. Render tabel rekap peserta per tanggal
+// 3. Render tabel rekap peserta yang dipisah per tanggal
 function renderDaftarPeserta(data) {
     const targetTabelArea = document.getElementById('targetTabelArea');
-    if (!targetTabelArea) {
-        // Fallback jika menggunakan elemen tabel biasa
-        const tbody = document.getElementById('tabelPesertaBody');
-        if (!tbody) return;
+    if (!targetTabelArea) return;
 
-        if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px;">Belum ada data peserta.</td></tr>`;
-            return;
-        }
-
-        let rowsHtml = '';
-        data.forEach((row, index) => {
-            rowsHtml += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${row.nama || '-'}</td>
-                    <td>${row.tanggal || '-'}</td>
-                    <td>${row.jam || '-'}</td>
-                </tr>
-            `;
-        });
-        tbody.innerHTML = rowsHtml;
-        return;
-    }
-
-    // Ambil semua opsi tanggal yang ada di form
     const selectTanggalForm = document.getElementById('tanggal');
     if (!selectTanggalForm) return;
 
@@ -137,17 +113,17 @@ function renderDaftarPeserta(data) {
         let isPenuh = jumlah >= maxKuota;
 
         htmlContent += `
-            <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
-                <h4 style="color: ${isPenuh ? '#ff6b6b' : '#d4af37'}; margin-bottom: 10px;">
-                    📅 ${tglValue} (${jumlah}/${maxKuota}) ${isPenuh ? '❌ PENUH' : '✅'}
+            <div style="margin-bottom: 25px; background: rgba(0,0,0,0.25); padding: 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                <h4 style="color: ${isPenuh ? '#ff6b6b' : '#d4af37'}; margin-bottom: 12px; font-size: 16px;">
+                    📅 ${tglValue} &nbsp;|&nbsp; Kuota: ${jumlah}/${maxKuota} ${isPenuh ? '❌ <b>(PENUH)</b>' : '✅'}
                 </h4>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
                         <thead>
-                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;">
-                                <th style="padding: 8px;">NO</th>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.15); text-align: left; color: #a0aec0;">
+                                <th style="padding: 8px; width: 40px;">NO</th>
                                 <th style="padding: 8px;">NAMA</th>
-                                <th style="padding: 8px;">JAM</th>
+                                <th style="padding: 8px; width: 130px;">JAM</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -157,16 +133,16 @@ function renderDaftarPeserta(data) {
             pesertaTanggal.forEach((p, index) => {
                 htmlContent += `
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td style="padding: 8px;">${index + 1}</td>
-                        <td style="padding: 8px;">${p.nama}</td>
-                        <td style="padding: 8px;">${p.jam}</td>
+                        <td style="padding: 8px; color: #cbd5e0;">${index + 1}</td>
+                        <td style="padding: 8px; color: #fff; font-weight: 500;">${p.nama}</td>
+                        <td style="padding: 8px; color: #e2e8f0;">${p.jam}</td>
                     </tr>
                 `;
             });
         } else {
             htmlContent += `
                 <tr>
-                    <td colspan="3" style="padding: 10px; text-align: center; color: #888;">Belum ada peserta di tanggal ini</td>
+                    <td colspan="3" style="padding: 12px; text-align: center; color: #718096; font-style: italic;">Belum ada peserta terdaftar di tanggal ini</td>
                 </tr>
             `;
         }
