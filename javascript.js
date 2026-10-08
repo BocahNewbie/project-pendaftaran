@@ -1,9 +1,17 @@
 const scriptURL = 'https://script.google.com/macros/s/AKfycbymNzVYA71wpGjD4yKVRlpmwoO772hCpMoeSMaDFwkVU7ZrbHy0MT7wwc4I63OpVa0D_Q/exec';
 const MAX_KUOTA = 14;
 
+// Daftar semua tanggal yang tersedia di form
+const DAFTAR_TANGGAL = [
+    "30 Oktober 2026",
+    "31 Oktober 2026",
+    "1 November 2026",
+    "2 November 2026",
+    "3 November 2026"
+];
+
 document.addEventListener("DOMContentLoaded", function() {
     loadDataPeserta();
-    document.getElementById('filterTanggal').addEventListener('change', renderPesertaDanKuota);
 
     // Tombol tutup modal popup
     document.getElementById('closeModalBtn').addEventListener('click', function() {
@@ -13,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Mengambil data dari Google Sheets menggunakan metode JSONP agar tembus CORS
 function loadDataPeserta() {
-    // Hapus script lama jika ada agar tidak menumpuk
     const oldScript = document.getElementById('jsonpScript');
     if (oldScript) {
         oldScript.remove();
@@ -36,7 +43,7 @@ window.handleSheetData = function(data) {
     }
 };
 
-// Memperbarui status kuota & opsi tanggal yang penuh
+// Memperbarui status kuota & opsi tanggal yang penuh pada form utama
 function updateOpsiTanggalDanUI(data) {
     const selectTanggalForm = document.getElementById('tanggal');
     const options = selectTanggalForm.querySelectorAll('option');
@@ -65,34 +72,62 @@ function updateOpsiTanggalDanUI(data) {
         }
     });
 
-    renderPesertaDanKuota();
+    renderSemuaPesertaPerTanggal(data);
 }
 
-// Menampilkan list peserta (Hanya Nama dan Jam saja)
-function renderPesertaDanKuota() {
-    const filterTgl = document.getElementById('filterTanggal').value;
-    const listContainer = document.getElementById('listPeserta');
-    const kuotaBadge = document.getElementById('kuotaBadge');
-    
-    listContainer.innerHTML = "";
-    
-    let pesertaList = [];
-    if (window.allDataPeserta && Array.isArray(window.allDataPeserta)) {
-        pesertaList = window.allDataPeserta.filter(row => row.tanggal && row.tanggal.toString().trim() === filterTgl);
-    }
+// Merender daftar peserta per tanggal secara berderet ke bawah dengan format tabel No | Nama | Jam
+function renderSemuaPesertaPerTanggal(data) {
+    const container = document.getElementById('containerSemuaTanggal');
+    container.innerHTML = "";
 
-    let sisaKuota = MAX_KUOTA - pesertaList.length;
-    kuotaBadge.textContent = `Terisi: ${pesertaList.length}/${MAX_KUOTA} | Sisa Kuota: ${sisaKuota > 0 ? sisaKuota : 0}`;
+    DAFTAR_TANGGAL.forEach(tgl => {
+        // Filter peserta berdasarkan tanggal
+        let pesertaList = [];
+        if (Array.isArray(data)) {
+            pesertaList = data.filter(row => row.tanggal && row.tanggal.toString().trim() === tgl);
+        }
 
-    if (pesertaList.length === 0) {
-        listContainer.innerHTML = "<li>Belum ada peserta di tanggal ini.</li>";
-        return;
-    }
+        let sisaKuota = MAX_KUOTA - pesertaList.length;
 
-    pesertaList.forEach((p, index) => {
-        let li = document.createElement('li');
-        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.jam || '-'}</b>`;
-        listContainer.appendChild(li);
+        // Buat pembungkus per tanggal
+        let sectionDiv = document.createElement('div');
+        sectionDiv.className = 'tanggal-section';
+
+        let headerHtml = `
+            <div class="tanggal-header">
+                <strong>${tgl}</strong>
+                <span class="badge-kuota">Terisi: ${pesertaList.length}/${MAX_KUOTA}</span>
+            </div>
+        `;
+
+        let tableHtml = `<table class="tabel-peserta">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">No</th>
+                    <th style="width: 60%;">Nama</th>
+                    <th style="width: 25%;">Jam</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+        if (pesertaList.length === 0) {
+            tableHtml += `<tr><td colspan="3" style="text-align: center; color: #888; padding: 8px;">Belum ada peserta</td></tr>`;
+        } else {
+            pesertaList.forEach((p, index) => {
+                tableHtml += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${p.nama}</td>
+                        <td>${p.jam || '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        tableHtml += `</tbody></table>`;
+
+        sectionDiv.innerHTML = headerHtml + tableHtml;
+        container.appendChild(sectionDiv);
     });
 }
 
