@@ -6,7 +6,6 @@
 }
 
 body {
-    /* Background gradasi hijau toska muda cerah (turquoise) & biru pastel */
     background: linear-gradient(135deg, #4db6ac 0%, #00897b 50%, #80deea 100%);
     background-attachment: fixed;
     display: flex;
@@ -16,60 +15,27 @@ body {
     padding: 20px;
 }
 
-/* Layout Berdampingan (Form di Kiri, Daftar Peserta di Kanan) */
-.main-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    justify-content: center;
-    align-items: flex-start;
-    max-width: 950px;
-    width: 100%;
-}
-
 /* Container Form Utama */
 .container {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    padding: 30px;
+    padding: 35px 30px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.2);
     width: 100%;
-    max-width: 440px;
+    max-width: 450px;
 }
 
-/* Sidebar / Panel Daftar Peserta di Samping */
-.sidebar-peserta {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.15);
-    width: 100%;
-    max-width: 400px;
-}
-
-h2, h3 {
+h2 {
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 22px;
     color: #00695c;
     font-weight: 700;
+    font-size: 24px;
 }
 
-h2 { font-size: 24px; }
-h3 { font-size: 20px; }
-
-.subtitle-info {
-    text-align: center;
-    font-size: 12px;
-    color: #00897b;
-    margin-bottom: 15px;
-    font-weight: 500;
-}
-
-.form-group, .filter-container {
+.form-group {
     margin-bottom: 16px;
 }
 
@@ -83,12 +49,12 @@ label {
 
 input[type="text"], input[type="tel"], select {
     width: 100%;
-    padding: 11px 14px;
+    padding: 12px 14px;
     border: 2px solid #b2dfdb;
     border-radius: 10px;
     font-size: 14px;
     color: #1a1a2e;
-    background-color: #e0f2f1;
+    background-color: #f4fbfb;
     transition: all 0.3s ease;
 }
 
@@ -107,7 +73,7 @@ input:focus, select:focus {
 /* Tombol Submit */
 button[type="submit"] {
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);
     color: white;
     border: none;
@@ -117,7 +83,7 @@ button[type="submit"] {
     cursor: pointer;
     box-shadow: 0 6px 15px rgba(38, 166, 154, 0.3);
     transition: all 0.3s ease;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 button[type="submit"]:hover {
@@ -132,50 +98,9 @@ button:disabled {
     box-shadow: none;
 }
 
-/* Badge Kuota */
-.kuota-badge {
-    background: #e0f7fa;
-    color: #00695c;
-    text-align: center;
-    padding: 8px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    border: 1px solid #b2dfdb;
-}
-
-/* Kotak List Peserta */
-.list-peserta-box {
-    max-height: 220px;
-    overflow-y: auto;
-    border: 1px solid #b2dfdb;
-    border-radius: 10px;
-    background: #f4fbfb;
-    padding: 10px;
-}
-
-.list-peserta-box ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.list-peserta-box li {
-    padding: 8px 10px;
-    border-bottom: 1px solid #e0f2f1;
-    font-size: 13px;
-    color: #37474f;
-    display: flex;
-    justify-content: space-between;
-}
-
-.list-peserta-box li:last-child {
-    border-bottom: none;
-}
-
-/* STYLE KREDIT / FOOTER (WARNA TETAP SESUAI PERMINTAAN) */
+/* STYLE KREDIT / FOOTER (Warna Tetap) */
 .credit {
-    margin-top: 20px;
+    margin-top: 22px;
     text-align: center;
     font-size: 13px;
     color: #5c6bc0;
@@ -189,7 +114,7 @@ button:disabled {
     text-transform: uppercase;
 }
 
-/* --- STYLE POPUP MODAL NOTIFIKASI --- */
+/* --- STYLE POPUP MODAL NOTIFIKASI (Z-Index Tinggi & Interaktif) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -201,8 +126,7 @@ button:disabled {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-    animation: fadeIn 0.3s ease;
+    z-index: 999999;
 }
 
 .modal-box {
@@ -212,8 +136,8 @@ button:disabled {
     max-width: 380px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border-top: 5px solid #26a69a;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    border-top: 6px solid #26a69a;
 }
 
 .modal-icon {
@@ -248,9 +172,4 @@ button:disabled {
 
 .modal-box button:hover {
     background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
 }
