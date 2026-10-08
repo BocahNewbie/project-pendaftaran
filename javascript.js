@@ -127,11 +127,12 @@ window.handleKuotaData = function(data) {
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
                     option.text = tglValue + " (PENUH - 13/13)";
-                    infoHtml += `<li style="margin-bottom: 6px;">✨ ${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (13/13) 🚫</span></li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">✨ ${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (${jumlahPendaftar}/${MAX_KUOTA}) 🚫</span></li>`;
                 } else {
                     option.disabled = false;
-                    option.text = tglValue + ` (${jumlahPendaftar}/13 - Sisa ${sisaKuota})`;
-                    infoHtml += `<li style="margin-bottom: 6px;">📅 ${tglValue}: Tersisa <b>${sisaKuota}</b> slot (${jumlahPendaftar}/13) ✅</li>`;
+                    option.text = tglValue + ` (${jumlahPendaftar}/${MAX_KUOTA})`;
+                    // Tulisan "Tersisa" dihilangkan, menyisakan nama tanggal dan format slot (contoh: 2/13)
+                    infoHtml += `<li style="margin-bottom: 6px;">📅 ${tglValue}: <b>(${jumlahPendaftar}/${MAX_KUOTA})</b> ✅</li>`;
                 }
             }
         });
