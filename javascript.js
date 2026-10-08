@@ -19,7 +19,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     responseMessage.textContent = '';
 
     // Ganti dengan URL Web App Apps Script Anda yang aktif
-    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw34g7tWMu74yOMZd3BZ_Wix6qTODtd7q5G7ZfeneyOmlP3kODDSnYiTHExsbNKJZEWPQ/exec';
 
     fetch(scriptURL, {
         method: 'POST',
@@ -34,7 +34,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         loadingDiv.style.display = 'none';
         submitBtn.disabled = false;
         
-        responseMessage.style.color = 'green';
+        responseMessage.style.color = '#00695c';
         responseMessage.textContent = 'Pendaftaran berhasil dikirim!';
         
         document.getElementById('pendaftaranForm').reset();
