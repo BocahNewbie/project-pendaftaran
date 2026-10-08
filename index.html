@@ -3,82 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pendaftaran</title>
+    <title>Form Pendaftaran Treatment</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h2>Pendaftaran</h2>
-        <form id="registrationForm">
+        <h2>Pendaftaran Treatment</h2>
+        <form id="pendaftaranForm">
             <div class="form-group">
-                <label for="nama">Nama Lengkap Anak</label>
-                <input type="text" id="nama_anak" name="nama" required>
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
             </div>
+
             <div class="form-group">
-                <label for="nama">Nama Orangtua</label>
-                <input type="text" id="nama" name="nama" required>
+                <label for="alamat">Alamat</label>
+                <textarea id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap"></textarea>
             </div>
+
             <div class="form-group">
-                <label for="email">Alamat Email</label>
-                <input type="email" id="email" name="email" required>
+                <label for="telepon">No WhatsApp</label>
+                <input type="tel" id="telepon" name="telepon" required placeholder="Contoh: 08123456789">
             </div>
+
             <div class="form-group">
-                <label for="telepon">Nomor WhatsApp</label>
-                <input type="tel" id="telepon" name="telepon" required>
+                <label for="tanggal">Tanggal Treatment</label>
+                <input type="date" id="tanggal" name="tanggal" required>
             </div>
+
             <div class="form-group">
-                <label for="kategori">Kategori Pendaftaran</label>
-                <select id="kategori" name="kategori" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    <option value="Merangkak">Merangkak</option>
-                    <option value="Berjalan">Berjalan</option>
-                    <option value="Pindah Bola">Pindah Bola</option>
+                <label for="jam">Jam Treatment</label>
+                <input type="time" id="jam" name="jam" required>
+            </div>
+
+            <div class="form-group">
+                <label for="keterangan">Keterangan Pembayaran</label>
+                <select id="keterangan" name="keterangan">
+                    <option value="Belum">Belum</option>
+                    <option value="Lunas">Lunas</option>
                 </select>
             </div>
+
             <button type="submit" id="submitBtn">Daftar Sekarang</button>
         </form>
-
-        <!-- AREA DAFTAR PESERTA PER KATEGORI -->
-        <div class="peserta-section">
-            <h3>Daftar Peserta Terdaftar</h3>
-            
-            <div class="kategori-box">
-                <h4>Kategori Merangkak <span id="count-merangkak">0</span></h4>
-                <ol id="list-merangkak"><li>Memuat data...</li></ol>
-            </div>
-
-            <div class="kategori-box">
-                <h4>Kategori Berjalan <span id="count-berjalan">0</span></h4>
-                <ol id="list-berjalan"><li>Memuat data...</li></ol>
-            </div>
-
-            <div class="kategori-box">
-                <h4>Kategori Pindah Bola <span id="count-pindah-bola">0</span></h4>
-                <ol id="list-pindah-bola"><li>Memuat data...</li></ol>
-            </div>
-        </div>
-
-        <footer class="credit">
-            Created by <span>BOCAH NEWBIE</span>
-        </footer>
-    </div>
-
-    <!-- POPUP SUKSES -->
-    <div id="successPopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h3>Pendaftaran Berhasil!</h3>
-            <p>Terima kasih, data Anda telah berhasil disimpan.</p>
-            <button id="closeSuccessBtn">Tutup</button>
-        </div>
-    </div>
-
-    <!-- POPUP DUPLIKAT / EROR -->
-    <div id="duplicatePopup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h3 style="color: #d32f2f;">Data Sudah Terdaftar</h3>
-            <p id="duplicateMessage">Maaf, data yang Anda masukkan sudah ada di sistem kami.</p>
-            <button id="closeDuplicateBtn">Periksa Kembali</button>
-        </div>
+        <div id="loading" style="display:none;">Sedang memproses...</div>
+        <div id="responseMessage"></div>
     </div>
 
     <script src="javascript.js"></script>
