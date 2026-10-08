@@ -1,16 +1,16 @@
 :root {
-    --bg-primary: #090d16;
-    --card-bg: rgba(30, 41, 59, 0.85);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent-gold: #d4af37;
-    --accent-gold-hover: #e6c547;
-    --input-bg: rgba(15, 23, 42, 0.7);
+    --bg-primary: #f0f4f8;
+    --card-bg: #ffffff;
+    --border-glass: #d9e2ec;
+    --text-main: #102a43;
+    --text-muted: #486581;
+    --accent-blue: #627d98;
+    --accent-blue-hover: #486581;
+    --input-bg: #f8fafc;
 }
 
 body {
-    background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
+    background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--text-main);
     min-height: 100vh;
@@ -21,7 +21,7 @@ body {
     align-items: center;
 }
 
-/* Wrapper utama agar form dan tabel bersandingan rapi di layar luas */
+/* Wrapper utama */
 .page-wrapper {
     display: flex;
     gap: 30px;
@@ -32,14 +32,12 @@ body {
     align-items: flex-start;
 }
 
-/* Card Container ala Glassmorphism Mewah */
+/* Card Container Bergaya Bersih & Mewah */
 .card-container {
     background: var(--card-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(16, 42, 67, 0.08);
     padding: 30px;
     flex: 1;
     min-width: 320px;
@@ -55,7 +53,7 @@ h2, h3 {
     margin-top: 0;
     margin-bottom: 20px;
     text-align: center;
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 2px solid #f0f4f8;
     padding-bottom: 12px;
 }
 
@@ -76,8 +74,8 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 label {
@@ -87,10 +85,10 @@ label {
     letter-spacing: 0.3px;
 }
 
-/* Tombol Mewah Beraksen Gold */
+/* Tombol Biru Telur Asin / Biru Lembut */
 button, #submitBtn {
-    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
-    color: #0f172a;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #ffffff;
     font-weight: 600;
     padding: 14px;
     border: none;
@@ -100,14 +98,14 @@ button, #submitBtn {
     font-size: 15px;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
     margin-top: 5px;
 }
 
 button:hover, #submitBtn:hover {
-    background: linear-gradient(135deg, #e6c547 0%, #bd910b 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
 }
 
 /* Info Sisa Kuota */
@@ -118,7 +116,7 @@ button:hover, #submitBtn:hover {
 }
 
 #infoKuotaContainer li {
-    background: rgba(15, 23, 42, 0.5);
+    background: #f8fafc;
     border: 1px solid var(--border-glass);
     padding: 10px 14px;
     border-radius: 8px;
@@ -130,7 +128,7 @@ button:hover, #submitBtn:hover {
     color: var(--text-muted);
 }
 
-/* Tabel Peserta Modern */
+/* Tabel Peserta */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -140,15 +138,15 @@ table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: rgba(15, 23, 42, 0.6);
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--border-glass);
 }
 
 th {
-    background: rgba(30, 41, 59, 0.95);
-    color: var(--accent-gold);
+    background: #e2e8f0;
+    color: #334155;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
@@ -166,7 +164,7 @@ td {
     padding: 12px 10px;
     font-size: 13px;
     color: var(--text-main);
-    border-bottom: 1px solid var(--border-glass);
+    border-bottom: 1px solid #f1f5f9;
 }
 
 tr:last-child td {
@@ -174,12 +172,15 @@ tr:last-child td {
 }
 
 tr:hover td {
-    background: rgba(255, 255, 255, 0.03);
+    background: #f8fafc;
 }
 
+/* Credit berwarna biru lembayung ungu (Slate-Indigo) */
 .credit {
     text-align: center;
     font-size: 12px;
-    color: var(--text-muted);
+    color: #6366f1; 
+    font-weight: 600;
     margin-top: 20px;
+    letter-spacing: 0.5px;
 }
