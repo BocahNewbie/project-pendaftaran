@@ -1,93 +1,54 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC9veTqyIfGKc4mL5ALhqEB7ShEMIY87d9r8WdxZpFB1bLBsi4w30QE-tqdQTBW882uQ/exec"; // Ganti dengan URL /exec milikmu
+document.getElementById('pendaftaranForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-const form = document.getElementById("registrationForm");
-const successPopup = document.getElementById("successPopup");
-const duplicatePopup = document.getElementById("duplicatePopup");
-const duplicateMessage = document.getElementById("duplicateMessage");
-const closeSuccessBtn = document.getElementById("closeSuccessBtn");
-const closeDuplicateBtn = document.getElementById("closeDuplicateBtn");
+    // Ambil nilai dari form input
+    const formData = {
+        nama: document.getElementById('nama').value,
+        alamat: document.getElementById('alamat').value,
+        telepon: document.getElementById('telepon').value,
+        tanggal: document.getElementById('tanggal').value,
+        jam: document.getElementById('jam').value,
+        keterangan: document.getElementById('keterangan').value
+    };
 
-// Fungsi untuk mengambil dan menampilkan data peserta
-function loadPeserta() {
-  fetch(SCRIPT_URL)
-    .then((res) => res.json())
-    .then((response) => {
-      if (response.status === "success") {
-        renderList("merangkak", response.data["Merangkak"]);
-        renderList("berjalan", response.data["Berjalan"]);
-        renderList("pindah-bola", response.data["Pindah Bola"]);
-      }
+    // Tampilkan status loading / nonaktifkan tombol
+    const submitBtn = document.getElementById('submitBtn');
+    const loadingDiv = document.getElementById('loading');
+    const responseMessage = document.getElementById('responseMessage');
+
+    submitBtn.disabled = true;
+    loadingDiv.style.display = 'block';
+    responseMessage.textContent = '';
+
+    // Ganti URL di bawah dengan URL Deployment Web App Google Apps Script Anda
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', // Diperlukan jika mengirim ke Google Apps Script dari domain luar
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
     })
-    .catch((err) => console.error("Gagal memuat peserta:", err));
-}
-
-function renderList(idPrefix, listData) {
-  const listEl = document.getElementById(`list-${idPrefix}`);
-  const countEl = document.getElementById(`count-${idPrefix}`);
-
-  listEl.innerHTML = "";
-  countEl.textContent = listData ? listData.length : 0;
-
-  if (!listData || listData.length === 0) {
-    listEl.innerHTML = "<li class='empty'>Belum ada peserta</li>";
-    return;
-  }
-
-  listData.forEach((nama) => {
-    const li = document.createElement("li");
-    li.textContent = nama;
-    listEl.appendChild(li);
-  });
-}
-
-// Load data peserta saat pertama kali halaman terbuka
-document.addEventListener("DOMContentLoaded", loadPeserta);
-
-// Handle Submit Form
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const submitBtn = document.getElementById("submitBtn");
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Mengirim...";
-
-  const formData = {
-    nama: document.getElementById("nama_anak").value,     // Menangkap ID anak
-    nama_ortu: document.getElementById("nama").value,     // Menangkap ID orang tua
-    email: document.getElementById("email").value,
-    telepon: document.getElementById("telepon").value,
-    kategori: document.getElementById("kategori").value
-  };
-
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(formData)
-  })
-    .then((res) => res.json())
-    .then((response) => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Daftar Sekarang";
-
-      if (response.status === "success") {
-        successPopup.style.display = "flex";
-        form.reset();
-        loadPeserta(); // Reload daftar peserta setelah sukses mendaftar
-      } else {
-        duplicateMessage.textContent = response.message || "Data sudah terdaftar di sistem.";
-        duplicatePopup.style.display = "flex";
-      }
+    .then(() => {
+        // Karena mode 'no-cors', respons mentah tidak bisa dibaca langsung, 
+        // namun jika berhasil sampai sini, data umumnya sudah masuk ke spreadsheet.
+        loadingDiv.style.display = 'none';
+        submitBtn.disabled = false;
+        
+        responseMessage.style.color = 'green';
+        responseMessage.textContent = 'Pendaftaran berhasil dikirim!';
+        
+        // Reset form setelah berhasil
+        document.getElementById('pendaftaranForm').reset();
     })
-    .catch((error) => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Daftar Sekarang";
-      alert("Terjadi kesalahan koneksi: " + error.message);
+    .catch(error => {
+        loadingDiv.style.display = 'none';
+        submitBtn.disabled = false;
+        
+        responseMessage.style.color = 'red';
+        responseMessage.textContent = 'Terjadi kesalahan: ' + error;
     });
-});
-
-closeSuccessBtn.addEventListener("click", () => {
-  successPopup.style.display = "none";
-});
-
-closeDuplicateBtn.addEventListener("click", () => {
-  duplicatePopup.style.display = "none";
 });
