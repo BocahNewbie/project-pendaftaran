@@ -1,7 +1,14 @@
 const scriptURL = 'https://script.google.com/macros/s/AKfycbxqYKDrmuGUYiZ2P3YtkfYLx3uxSyMtqqTAFus83-NsVDZMGyzhEOlfsz5XVvk8BWOMoQ/exec';
 
 let globalDataPeserta = [];
-const MAX_KUOTA = 13;
+
+// Fungsi untuk menentukan kuota maksimal berdasarkan tanggal
+function getKuotaMaksimal(tanggalStr) {
+    if (tanggalStr && tanggalStr.includes("30 Oktober 2026")) {
+        return 6; // Kuota khusus tanggal 30 Oktober 2026 adalah 6 orang
+    }
+    return 13; // Kuota default tanggal lainnya adalah 13 orang
+}
 
 // 1. Ambil data saat halaman dimuat
 function loadDataKuota() {
@@ -18,26 +25,28 @@ function loadDataKuota() {
                 }
             });
 
-            // Update tampilan kuota di pilihan tanggal
+            // Update tampilan kuota dan status tutup (disabled) di pilihan tanggal
             const selectTanggalForm = document.getElementById('tanggal');
             if (selectTanggalForm) {
                 const options = selectTanggalForm.querySelectorAll('option');
                 options.forEach(option => {
                     let tglValue = option.value;
                     if (tglValue && tglValue !== "") {
+                        let maxKuota = getKuotaMaksimal(tglValue);
                         let jumlahPendaftar = countMap[tglValue] || 0;
-                        if (jumlahPendaftar >= MAX_KUOTA) {
+                        
+                        if (jumlahPendaftar >= maxKuota) {
                             option.disabled = true;
-                            option.text = tglValue + " (PENUH - " + jumlahPendaftar + "/" + MAX_KUOTA + ")";
+                            option.text = tglValue + " (PENUH - " + jumlahPendaftar + "/" + maxKuota + " ❌)";
                         } else {
                             option.disabled = false;
-                            option.text = tglValue + " (" + jumlahPendaftar + "/" + MAX_KUOTA + ")";
+                            option.text = tglValue + " (" + jumlahPendaftar + "/" + maxKuota + ")";
                         }
                     }
                 });
             }
 
-            // Render ulang tabel daftar peserta
+            // Render ulang tabel rekap peserta per tanggal
             renderDaftarPeserta(data);
             
             // Perbarui jam terpakai sesuai tanggal yang dipilih
@@ -83,29 +92,94 @@ if (inputTanggal) {
     inputTanggal.addEventListener('change', updateJamTerpakai);
 }
 
-// 3. Render tabel rekap peserta
+// 3. Render tabel rekap peserta per tanggal
 function renderDaftarPeserta(data) {
-    const tbody = document.getElementById('tabelPesertaBody');
-    const infoContainer = document.getElementById('infoKuotaContainer');
-    if (!tbody) return;
+    const targetTabelArea = document.getElementById('targetTabelArea');
+    if (!targetTabelArea) {
+        // Fallback jika menggunakan elemen tabel biasa
+        const tbody = document.getElementById('tabelPesertaBody');
+        if (!tbody) return;
 
-    if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px;">Belum ada data peserta.</td></tr>`;
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px;">Belum ada data peserta.</td></tr>`;
+            return;
+        }
+
+        let rowsHtml = '';
+        data.forEach((row, index) => {
+            rowsHtml += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${row.nama || '-'}</td>
+                    <td>${row.tanggal || '-'}</td>
+                    <td>${row.jam || '-'}</td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = rowsHtml;
         return;
     }
 
-    let rowsHtml = '';
-    data.forEach((row, index) => {
-        rowsHtml += `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${row.nama || '-'}</td>
-                <td>${row.tanggal || '-'}</td>
-                <td>${row.jam || '-'}</td>
-            </tr>
+    // Ambil semua opsi tanggal yang ada di form
+    const selectTanggalForm = document.getElementById('tanggal');
+    if (!selectTanggalForm) return;
+
+    const options = selectTanggalForm.querySelectorAll('option');
+    let htmlContent = '';
+
+    options.forEach(option => {
+        let tglValue = option.value;
+        if (!tglValue || tglValue === "") return;
+
+        let maxKuota = getKuotaMaksimal(tglValue);
+        let pesertaTanggal = data.filter(item => item.tanggal === tglValue);
+        let jumlah = pesertaTanggal.length;
+        let isPenuh = jumlah >= maxKuota;
+
+        htmlContent += `
+            <div style="margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                <h4 style="color: ${isPenuh ? '#ff6b6b' : '#d4af37'}; margin-bottom: 10px;">
+                    📅 ${tglValue} (${jumlah}/${maxKuota}) ${isPenuh ? '❌ PENUH' : '✅'}
+                </h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;">
+                                <th style="padding: 8px;">NO</th>
+                                <th style="padding: 8px;">NAMA</th>
+                                <th style="padding: 8px;">JAM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        if (pesertaTanggal.length > 0) {
+            pesertaTanggal.forEach((p, index) => {
+                htmlContent += `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 8px;">${index + 1}</td>
+                        <td style="padding: 8px;">${p.nama}</td>
+                        <td style="padding: 8px;">${p.jam}</td>
+                    </tr>
+                `;
+            });
+        } else {
+            htmlContent += `
+                <tr>
+                    <td colspan="3" style="padding: 10px; text-align: center; color: #888;">Belum ada peserta di tanggal ini</td>
+                </tr>
+            `;
+        }
+
+        htmlContent += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         `;
     });
-    tbody.innerHTML = rowsHtml;
+
+    targetTabelArea.innerHTML = htmlContent;
 }
 
 // 4. Handle Submit Form Pendaftaran
@@ -122,7 +196,7 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
     };
 
     const submitBtn = document.getElementById('submitBtn');
-    const loadingDiv = document.getElementById('loading');
+    const loadingDiv = document.getElementById('loading') || document.getElementById('loadingContainer');
 
     // Nonaktifkan tombol dan tampilkan loading
     submitBtn.disabled = true;
