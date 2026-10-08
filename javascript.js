@@ -11,32 +11,29 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Mengambil data dari Google Sheets via JSONP/GET
+// Mengambil data dari Google Sheets menggunakan metode JSONP agar tembus CORS
 function loadDataPeserta() {
-    const urlWithParam = scriptURL + "?callback=handleData&t=" + new Date().getTime();
-    
-    fetch(scriptURL)
-    .then(response => response.json())
-    .then(data => {
-        window.allDataPeserta = data;
-        updateOpsiTanggalDanUI(data);
-    })
-    .catch(error => {
-        console.log("Mencoba metode alternatif load data...", error);
-        // Fallback menggunakan script injection jika fetch standar diblokir CORS ketat
-        loadDataJSONP();
-    });
-}
+    // Hapus script lama jika ada agar tidak menumpuk
+    const oldScript = document.getElementById('jsonpScript');
+    if (oldScript) {
+        oldScript.remove();
+    }
 
-function loadDataJSONP() {
     const script = document.createElement('script');
-    script.src = scriptURL + "?callback=handleDataJsonp&t=" + new Date().getTime();
+    script.id = 'jsonpScript';
+    script.src = scriptURL + "?callback=handleSheetData&t=" + new Date().getTime();
     document.body.appendChild(script);
 }
 
-window.handleDataJsonp = function(data) {
-    window.allDataPeserta = data;
-    updateOpsiTanggalDanUI(data);
+// Fungsi global penerima data dari Google Apps Script
+window.handleSheetData = function(data) {
+    if (Array.isArray(data)) {
+        window.allDataPeserta = data;
+        updateOpsiTanggalDanUI(data);
+    } else {
+        window.allDataPeserta = [];
+        updateOpsiTanggalDanUI([]);
+    }
 };
 
 // Memperbarui status kuota & opsi tanggal yang penuh
@@ -47,7 +44,7 @@ function updateOpsiTanggalDanUI(data) {
     const countMap = {};
     if (Array.isArray(data)) {
         data.forEach(row => {
-            let tgl = row.tanggal;
+            let tgl = row.tanggal ? row.tanggal.toString().trim() : "";
             if (tgl) {
                 countMap[tgl] = (countMap[tgl] || 0) + 1;
             }
@@ -81,7 +78,7 @@ function renderPesertaDanKuota() {
     
     let pesertaList = [];
     if (window.allDataPeserta && Array.isArray(window.allDataPeserta)) {
-        pesertaList = window.allDataPeserta.filter(row => row.tanggal === filterTgl);
+        pesertaList = window.allDataPeserta.filter(row => row.tanggal && row.tanggal.toString().trim() === filterTgl);
     }
 
     let sisaKuota = MAX_KUOTA - pesertaList.length;
