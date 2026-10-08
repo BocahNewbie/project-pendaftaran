@@ -290,3 +290,13 @@ button:disabled {
     font-weight: normal;
     margin-left: -20px;
 }
+
+/* Membuat elemen di dalam baris menjadi sejajar berdampingan */
+.form-row {
+    display: flex;
+    gap: 15px; /* Jarak antara kolom tanggal dan jam */
+}
+
+.form-row .form-group {
+    flex: 1; /* Membagi rata lebar kolom */
+}
