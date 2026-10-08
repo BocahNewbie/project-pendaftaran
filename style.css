@@ -1,14 +1,13 @@
-/* --- PENGATURAN DASAR & LATAR BELAKANG WARDAH THEME --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
 body {
-    /* Background gradasi hijau toska khas Wardah yang elegan */
-    background: radial-gradient(circle at 10% 20%, rgba(0, 150, 136, 0.75) 0%, rgba(15, 32, 39, 1) 90%), linear-gradient(135deg, #004d40 0%, #26a69a 100%);
+    /* Background gradasi hijau toska muda cerah (turquoise) & biru pastel */
+    background: linear-gradient(135deg, #4db6ac 0%, #00897b 50%, #80deea 100%);
     background-attachment: fixed;
     display: flex;
     justify-content: center;
@@ -17,57 +16,86 @@ body {
     padding: 20px;
 }
 
-/* --- CONTAINER FORMULIR MODERN --- */
-.container {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 40px 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 20px 40px rgba(0, 77, 64, 0.25);
+/* Layout Berdampingan (Form di Kiri, Daftar Peserta di Kanan) */
+.main-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 950px;
     width: 100%;
-    max-width: 480px;
 }
 
-h2 {
+/* Container Form Utama */
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.15);
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Sidebar / Panel Daftar Peserta di Samping */
+.sidebar-peserta {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0, 77, 64, 0.15);
+    width: 100%;
+    max-width: 400px;
+}
+
+h2, h3 {
     text-align: center;
-    margin-bottom: 25px;
-    color: #004d40;
-    font-weight: 800;
-    font-size: 26px;
-    letter-spacing: -0.5px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-/* --- LABEL --- */
-label {
-    display: block;
     margin-bottom: 8px;
     color: #00695c;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 700;
 }
 
-/* --- KOLOM INPUT --- */
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+
+.subtitle-info {
+    text-align: center;
+    font-size: 12px;
+    color: #00897b;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.form-group, .filter-container {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #004d40;
+    font-weight: 600;
+    font-size: 13px;
+}
+
 input[type="text"], input[type="tel"], select {
     width: 100%;
-    padding: 13px 16px;
+    padding: 11px 14px;
     border: 2px solid #b2dfdb;
-    border-radius: 12px;
-    font-size: 15px;
+    border-radius: 10px;
+    font-size: 14px;
     color: #1a1a2e;
-    background-color: #f4fbfb;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #e0f2f1;
+    transition: all 0.3s ease;
 }
 
 input:focus, select:focus {
-    border-color: #00897b;
+    border-color: #26a69a;
     background-color: #ffffff;
-    box-shadow: 0 0 0 4px rgba(0, 137, 123, 0.2);
+    box-shadow: 0 0 0 4px rgba(38, 166, 154, 0.2);
     outline: none;
 }
 
@@ -76,38 +104,78 @@ input:focus, select:focus {
     text-transform: uppercase;
 }
 
-/* --- TOMBOL UTAMA (TOSKA WARDAH) --- */
+/* Tombol Submit */
 button[type="submit"] {
     width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #00897b 0%, #26a69a 100%);
+    padding: 13px;
+    background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0, 137, 123, 0.35);
+    box-shadow: 0 6px 15px rgba(38, 166, 154, 0.3);
     transition: all 0.3s ease;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 button[type="submit"]:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(0, 137, 123, 0.45);
-    background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+    background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
 }
 
 button:disabled {
     background: #b0bec5;
-    box-shadow: none;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
-/* --- STYLE KREDIT / FOOTER (WARNA TETAP) --- */
+/* Badge Kuota */
+.kuota-badge {
+    background: #e0f7fa;
+    color: #00695c;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    border: 1px solid #b2dfdb;
+}
+
+/* Kotak List Peserta */
+.list-peserta-box {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #b2dfdb;
+    border-radius: 10px;
+    background: #f4fbfb;
+    padding: 10px;
+}
+
+.list-peserta-box ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.list-peserta-box li {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e0f2f1;
+    font-size: 13px;
+    color: #37474f;
+    display: flex;
+    justify-content: space-between;
+}
+
+.list-peserta-box li:last-child {
+    border-bottom: none;
+}
+
+/* STYLE KREDIT / FOOTER (WARNA TETAP SESUAI PERMINTAAN) */
 .credit {
-    margin-top: 25px;
+    margin-top: 20px;
     text-align: center;
     font-size: 13px;
     color: #5c6bc0;
