@@ -30,11 +30,16 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
-// Helper untuk memformat tanggal persis seperti di database tanpa geser zona waktu UTC
+// Helper untuk membaca langsung string tanggal dari spreadsheet tanpa geser hari
 function formatTanggal(tglStr) {
     if (!tglStr) return '-';
-    // Ambil bagian YYYY-MM-DD saja
-    let cleanStr = tglStr.toString().split('T')[0];
+    let str = tglStr.toString().trim();
+    // Jika dari spreadsheet bentuknya sudah teks "30 Oktober 2026", langsung kembalikan
+    if (!str.includes('T') && !str.includes('-')) {
+        return str;
+    }
+    // Jika bentuknya format ISO (YYYY-MM-DD), ambil bagian tahun, bulan, hari secara manual
+    let cleanStr = str.split('T')[0];
     let parts = cleanStr.split('-');
     if (parts.length === 3) {
         let tahun = parts[0];
@@ -48,16 +53,11 @@ function formatTanggal(tglStr) {
     return tglStr;
 }
 
-// Helper untuk sorting tanggal dengan akurat tanpa terpengaruh UTC
+// Helper untuk sorting tanggal secara akurat
 function parseTanggalCustom(tglStr) {
     if (!tglStr) return new Date(8640000000000);
-    let cleanStr = tglStr.toString().split('T')[0];
-    let parts = cleanStr.split('-');
-    if (parts.length === 3) {
-        // Buat objek Date menggunakan waktu lokal (00:00:00)
-        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-    }
-    let p2 = tglStr.split(' ');
+    let formatted = formatTanggal(tglStr);
+    let p2 = formatted.split(' ');
     if (p2.length === 3) {
         let hari = parseInt(p2[0], 10);
         let bulanNama = p2[1];
@@ -107,7 +107,7 @@ window.handleKuotaData = function(data) {
     });
 
     if (data.length === 0) {
-        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #99f6e4;">Belum ada peserta terdaftar.</td></tr>`;
+        htmlTabel = `<tr><td colspan="4" style="text-align: center; padding: 25px; color: #99f6e4;">Belum ada peserta terdaftar. 📭</td></tr>`;
     }
     
     if (tabelBody) {
@@ -116,7 +116,7 @@ window.handleKuotaData = function(data) {
 
     if (selectTanggalForm) {
         const options = selectTanggalForm.querySelectorAll('option');
-        let infoHtml = "<b>Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0;'>";
+        let infoHtml = "<b>📊 Status Sisa Kuota:</b><ul style='margin: 8px 0 15px 20px; padding: 0;'>";
 
         options.forEach(option => {
             let tglValue = option.value;
@@ -127,11 +127,11 @@ window.handleKuotaData = function(data) {
                 if (jumlahPendaftar >= MAX_KUOTA) {
                     option.disabled = true;
                     option.text = tglValue + " (PENUH - 13/13)";
-                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (13/13)</span></li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">✨ ${tglValue}: <span style="color: #f87171; font-weight: bold;">Penuh (13/13) 🚫</span></li>`;
                 } else {
                     option.disabled = false;
                     option.text = tglValue + ` (${jumlahPendaftar}/13 - Sisa ${sisaKuota})`;
-                    infoHtml += `<li style="margin-bottom: 6px;">${tglValue}: Tersisa <b>${sisaKuota}</b> slot (${jumlahPendaftar}/13)</li>`;
+                    infoHtml += `<li style="margin-bottom: 6px;">📅 ${tglValue}: Tersisa <b>${sisaKuota}</b> slot (${jumlahPendaftar}/13) ✅</li>`;
                 }
             }
         });
