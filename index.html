@@ -12,12 +12,12 @@
         <form id="pendaftaranForm">
             <div class="form-group">
                 <label for="nama">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
+                <input type="text" id="nama" name="nama" required placeholder="MASUKKAN NAMA LENGKAP">
             </div>
 
             <div class="form-group">
                 <label for="alamat">Alamat</label>
-                <textarea id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap"></textarea>
+                <input type="text" id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap">
             </div>
 
             <div class="form-group">
@@ -25,14 +25,17 @@
                 <input type="tel" id="telepon" name="telepon" required placeholder="Contoh: 08123456789">
             </div>
 
-            <div class="form-group">
-                <label for="tanggal">Tanggal Treatment</label>
-                <input type="date" id="tanggal" name="tanggal" required>
-            </div>
+            <!-- Bagian Tanggal dan Jam Sejajar -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tanggal">Tanggal Treatment</label>
+                    <input type="date" id="tanggal" name="tanggal" required>
+                </div>
 
-            <div class="form-group">
-                <label for="jam">Jam Treatment</label>
-                <input type="time" id="jam" name="jam" required>
+                <div class="form-group">
+                    <label for="jam">Jam Treatment</label>
+                    <input type="time" id="jam" name="jam" required>
+                </div>
             </div>
 
             <div class="form-group">
