@@ -1,4 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwEZD2R6eSQ1sR-Z-JZBdpFwFVLICb8IAna9mIJFp6IggrTS_OVe5xdJW-08_jQgUZa4w/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzWrBVYTFi22twab_zOpYoQcARVMbibBs6Jo_OIj9H2TateFVWxmGmhnVuV6UOGdvuggg/exec';
 const MAX_KUOTA = 13; // Kuota maksimal diperbarui menjadi 13 orang per hari
 
 document.addEventListener("DOMContentLoaded", function() {
