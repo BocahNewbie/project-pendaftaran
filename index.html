@@ -65,20 +65,16 @@
         </div>
 
         <!-- PANEL DAFTAR PESERTA PER TANGGAL DI SAMPING -->
+        <!-- PANEL DAFTAR PESERTA PER TANGGAL (SEMUA TANGGAL TAMPIL SEKALIGUS) -->
         <div class="sidebar-peserta">
-            <h3>Daftar Peserta & Kuota</h3>
-            <p class="subtitle-info">Maksimal 14 orang per tanggal</p>
+            <h3>Daftar Peserta</h3>
+            <p class="subtitle-info">Maksimal 14 Orang setiap Harinya</p>
             
-            <div class="filter-container">
-                <label for="filterTanggal">Pilih Tanggal:</label>
-                <select id="filterTanggal">
-                    <option value="30 Oktober 2026">30 Oktober 2026</option>
-                    <option value="31 Oktober 2026">31 Oktober 2026</option>
-                    <option value="1 November 2026">1 November 2026</option>
-                    <option value="2 November 2026">2 November 2026</option>
-                    <option value="3 November 2026">3 November 2026</option>
-                </select>
+            <div id="containerSemuaTanggal">
+                <!-- Data per tanggal akan dirender otomatis di sini oleh JavaScript -->
+                <p style="text-align: center; color: #555; font-size: 13px;">Memuat data peserta...</p>
             </div>
+        </div>
 
             <div class="kuota-badge" id="kuotaBadge">Sisa Kuota: Menghitung...</div>
 
