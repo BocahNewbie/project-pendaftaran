@@ -3,98 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pendaftaran Treatment</title>
+    <title>Pendaftaran Treatment</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Pendaftaran Treatment</h2>
-        <form id="pendaftaranForm">
-            <div class="form-group">
+
+    <div class="page-wrapper">
+        <!-- Kotak Form Pendaftaran -->
+        <div class="card-container">
+            <h2>Pendaftaran Treatment</h2>
+            <form id="pendaftaranForm">
                 <label for="nama">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap">
-            </div>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
 
-            <div class="form-group">
                 <label for="alamat">Alamat</label>
-                <input type="text" id="alamat" name="alamat" required placeholder="Masukkan alamat lengkap">
-            </div>
+                <input type="text" id="alamat" placeholder="Masukkan alamat lengkap" required>
 
-            <div class="form-group">
                 <label for="telepon">No WhatsApp</label>
-                <input type="tel" id="telepon" name="telepon" required>
-            </div>
+                <input type="tel" id="telepon" placeholder="Contoh: 08123456789" required>
 
-            <div class="form-group">
                 <label for="tanggal">Tanggal Treatment</label>
-                <select id="tanggal" name="tanggal" required>
-                    <option value="" disabled selected>-- Pilih Tanggal Treatment --</option>
+                <select id="tanggal" required>
+                    <option value="">-- Pilih Tanggal Treatment --</option>
                     <option value="30 Oktober 2026">30 Oktober 2026</option>
                     <option value="31 Oktober 2026">31 Oktober 2026</option>
                     <option value="1 November 2026">1 November 2026</option>
                     <option value="2 November 2026">2 November 2026</option>
                     <option value="3 November 2026">3 November 2026</option>
                 </select>
-            </div>
 
-            <div class="form-group">
-                <label for="jam">Jam Treatment (Keterangan)</label>
-                <input type="text" id="jam" name="jam" required placeholder="Jam 10.00">
-            </div>
+                <label for="jam">Jam Treatment</label>
+                <input type="text" id="jam" placeholder="Contoh: Jam 10.00" required>
 
-            <div class="form-group">
                 <label for="keterangan">Keterangan Pembayaran</label>
-                <select id="keterangan" name="keterangan">
+                <select id="keterangan">
                     <option value="Belum">Belum</option>
                     <option value="Lunas">Lunas</option>
                 </select>
-            </div>
 
-            <button type="submit" id="submitBtn">Daftar Sekarang</button>
-        </form>
-
-        <div class="credit">
-            Credit by <span>Bocah Newbie</span>
+                <button type="submit" id="submitBtn">Daftar Sekarang</button>
+                <div id="loading" style="display:none; text-align:center; margin-top:10px; color:#d4af37;">Memproses...</div>
+            </form>
+            <div class="credit">Credit by BOCAH NEWBIE</div>
         </div>
 
-        <div id="loading" style="display:none; text-align:center; margin-top:10px; color: #00695c; font-weight:600;">Sedang memproses...</div>
-        <div id="responseMessage" style="text-align:center; margin-top:10px;"></div>
+        <!-- Kotak Status Kuota & Daftar Peserta Realtime -->
+        <div class="card-container">
+            <h3>📊 Status Kuota & Daftar Peserta</h3>
+            
+            <div id="infoKuotaContainer">
+                <!-- Data kuota realtime akan muncul di sini -->
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Tanggal Treatment</th>
+                            <th>Jam</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelPesertaBody">
+                        <tr><td colspan="4" style="text-align: center; padding: 20px;">Memuat data peserta...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- Bagian untuk menampilkan sisa kuota & daftar peserta realtime -->
-<div class="realtime-container" style="margin-top: 30px;">
-  <h3>📊 Status Kuota & Daftar Peserta</h3>
-  
-  <!-- Info Sisa Kuota per Tanggal -->
-  <div id="infoKuotaContainer" style="margin-bottom: 15px;">
-    <!-- Akan diisi secara otomatis oleh JavaScript -->
-  </div>
-
-  <!-- Tabel Daftar Peserta Terdaftar -->
-  <div style="overflow-x: auto;">
-    <table border="1" style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: left;">
-      <thead>
-  <tr style="background-color: #f7fafc;">
-    <th style="padding: 12px;">No</th>
-    <th style="padding: 12px;">Nama</th>
-    <th style="padding: 12px;">Tanggal Treatment</th>
-    <th style="padding: 12px;">Jam</th>
-  </tr>
-</thead>
-      <tbody id="tabelPesertaBody">
-        <tr><td colspan="5" style="text-align: center; padding: 10px;">Memuat data...</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-    
-    <!-- MODAL POPUP NOTIFIKASI BERHASIL -->
-    <div id="popupModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box">
-            <div class="modal-icon">🎉</div>
-            <h3>Pendaftaran Berhasil!</h3>
-            <p>Terima kasih, data treatment Anda telah tersimpan dengan aman.</p>
-            <button id="closeModalBtn" type="button">OK, Mengerti</button>
+    <!-- Modal Popup Sukses -->
+    <div id="popupModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:999;">
+        <div style="background:#1e293b; padding:30px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); text-align:center; max-width:400px; width:90%;">
+            <h3 style="color:#d4af37; margin-top:0;">Pendaftaran Berhasil!</h3>
+            <p style="color:#94a3b8; font-size:14px;">Data Anda telah tercatat secara realtime.</p>
+            <button id="closeModalBtn" style="margin-top:15px; padding:10px 20px;">Tutup</button>
         </div>
     </div>
 
