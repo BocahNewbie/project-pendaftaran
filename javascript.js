@@ -67,7 +67,7 @@ function parseTanggalCustom(tglStr) {
     return new Date(tglStr);
 }
 
-// Helper untuk mengubah string jam (misal: "08.30" atau "Jam 10.00") menjadi angka menit untuk sorting
+// Helper untuk mengubah string jam menjadi angka menit untuk sorting dari yang paling pagi
 function parseJamToMinutes(jamStr) {
     if (!jamStr) return 9999;
     let clean = jamStr.toString().toLowerCase().replace(/jam/g, '').trim();
@@ -143,8 +143,8 @@ window.handleKuotaData = function(data) {
                         <span>📅 ${tgl}</span> 
                         <span>${statusBadge}</span>
                     </h4>
-                    <!-- Ditambahkan max-height dan overflow-y: auto agar tabel bisa di-scroll -->
-                    <div class="table-responsive" style="max-height: 220px; overflow-y: auto; border-radius: 10px;">
+                    <!-- max-height diset pas untuk 13 baris data agar jika lebih baru muncul scrollbar -->
+                    <div class="table-responsive" style="max-height: 310px; overflow-y: auto; border-radius: 10px;">
                         <table>
                             <thead style="position: sticky; top: 0; z-index: 1;">
                                 <tr>
