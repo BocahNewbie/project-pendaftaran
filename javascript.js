@@ -1,24 +1,43 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyPte84c-av-IYfshpnDGG4Z1Jq_mrWAem9vngwCoc3H6QOtctZOiu432TkABjm1RhtaQ/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbySUSB5faE3dtXaCTVLRr0xVyUpr5wGzoeOH-zc8MWy6ohW_fAVg9yMDVfRzAggLXsPmQ/exec';
 const MAX_KUOTA = 14;
 
 document.addEventListener("DOMContentLoaded", function() {
     loadDataPeserta();
     document.getElementById('filterTanggal').addEventListener('change', renderPesertaDanKuota);
+
+    // Tombol tutup modal popup
+    document.getElementById('closeModalBtn').addEventListener('click', function() {
+        document.getElementById('popupModal').style.display = 'none';
+    });
 });
 
-// Mengambil data dari Google Sheets via GET
+// Mengambil data dari Google Sheets via JSONP/GET
 function loadDataPeserta() {
+    const urlWithParam = scriptURL + "?callback=handleData&t=" + new Date().getTime();
+    
     fetch(scriptURL)
     .then(response => response.json())
     .then(data => {
-        window.allDataPeserta = data; 
+        window.allDataPeserta = data;
         updateOpsiTanggalDanUI(data);
     })
     .catch(error => {
-        console.log("Gagal memuat data peserta:", error);
-        document.getElementById('listPeserta').innerHTML = "<li>Gagal memuat data.</li>";
+        console.log("Mencoba metode alternatif load data...", error);
+        // Fallback menggunakan script injection jika fetch standar diblokir CORS ketat
+        loadDataJSONP();
     });
 }
+
+function loadDataJSONP() {
+    const script = document.createElement('script');
+    script.src = scriptURL + "?callback=handleDataJsonp&t=" + new Date().getTime();
+    document.body.appendChild(script);
+}
+
+window.handleDataJsonp = function(data) {
+    window.allDataPeserta = data;
+    updateOpsiTanggalDanUI(data);
+};
 
 // Memperbarui status kuota & opsi tanggal yang penuh
 function updateOpsiTanggalDanUI(data) {
@@ -75,7 +94,6 @@ function renderPesertaDanKuota() {
 
     pesertaList.forEach((p, index) => {
         let li = document.createElement('li');
-        // Menampilkan Nama dan Jam Treatment
         li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.jam || '-'}</b>`;
         listContainer.appendChild(li);
     });
@@ -115,8 +133,8 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         loadingDiv.style.display = 'none';
         submitBtn.disabled = false;
         
-        responseMessage.style.color = '#00695c';
-        responseMessage.textContent = 'Pendaftaran berhasil dikirim!';
+        // Tampilkan Modal Popup Berhasil
+        document.getElementById('popupModal').style.display = 'flex';
         
         document.getElementById('pendaftaranForm').reset();
         
