@@ -61,6 +61,33 @@
         <div id="responseMessage" style="text-align:center; margin-top:10px;"></div>
     </div>
 
+    <!-- Bagian untuk menampilkan sisa kuota & daftar peserta realtime -->
+<div class="realtime-container" style="margin-top: 30px;">
+  <h3>📊 Status Kuota & Daftar Peserta</h3>
+  
+  <!-- Info Sisa Kuota per Tanggal -->
+  <div id="infoKuotaContainer" style="margin-bottom: 15px;">
+    <!-- Akan diisi secara otomatis oleh JavaScript -->
+  </div>
+
+  <!-- Tabel Daftar Peserta Terdaftar -->
+  <div style="overflow-x: auto;">
+    <table border="1" style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: left;">
+      <thead>
+        <tr style="background-color: #f2f2f2;">
+          <th style="padding: 8px;">No</th>
+          <th style="padding: 8px;">Nama</th>
+          <th style="padding: 8px;">Tanggal Treatment</th>
+          <th style="padding: 8px;">Jam</th>
+        </tr>
+      </thead>
+      <tbody id="tabelPesertaBody">
+        <tr><td colspan="5" style="text-align: center; padding: 10px;">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+    
     <!-- MODAL POPUP NOTIFIKASI BERHASIL -->
     <div id="popupModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
