@@ -3,11 +3,6 @@ const MAX_KUOTA = 13;
 
 document.addEventListener("DOMContentLoaded", function() {
     loadDataKuota();
-    
-    const filterTgl = document.getElementById('filterTanggal');
-    if (filterTgl) {
-        filterTgl.addEventListener('change', renderPesertaDiSidebar);
-    }
 
     const closeBtn = document.getElementById('closeModalBtn');
     if (closeBtn) {
@@ -17,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Mengambil data kuota & peserta dari Google Sheets via JSONP
 function loadDataKuota() {
     const oldScript = document.getElementById('jsonpScript');
     if (oldScript) {
@@ -30,10 +24,7 @@ function loadDataKuota() {
     document.body.appendChild(script);
 }
 
-// Fungsi global penerima data dari Google Apps Script
 window.handleKuotaData = function(data) {
-    window.allDataPeserta = data; // Simpan data global untuk sidebar
-    
     const selectTanggalForm = document.getElementById('tanggal');
     if (!selectTanggalForm) return;
     
@@ -62,44 +53,8 @@ window.handleKuotaData = function(data) {
             }
         }
     });
-
-    renderPesertaDiSidebar();
 };
 
-// Menampilkan list peserta (Nama & Jam) di sidebar berdasarkan tanggal yang dipilih
-function renderPesertaDiSidebar() {
-    const filterElement = document.getElementById('filterTanggal');
-    const listContainer = document.getElementById('listPeserta');
-    const kuotaBadge = document.getElementById('kuotaBadge');
-    
-    if (!filterElement || !listContainer) return;
-
-    const filterTgl = filterElement.value;
-    listContainer.innerHTML = "";
-    
-    let pesertaList = [];
-    if (window.allDataPeserta && Array.isArray(window.allDataPeserta)) {
-        pesertaList = window.allDataPeserta.filter(row => row.tanggal && row.tanggal.toString().trim() === filterTgl);
-    }
-
-    let sisaKuota = MAX_KUOTA - pesertaList.length;
-    if (kuotaBadge) {
-        kuotaBadge.textContent = `Terisi: ${pesertaList.length}/${MAX_KUOTA} | Sisa Kuota: ${sisaKuota > 0 ? sisaKuota : 0}`;
-    }
-
-    if (pesertaList.length === 0) {
-        listContainer.innerHTML = "<li>Belum ada peserta di tanggal ini.</li>";
-        return;
-    }
-
-    pesertaList.forEach((p, index) => {
-        let li = document.createElement('li');
-        li.innerHTML = `<span>${index + 1}. ${p.nama}</span> <b>${p.jam || '-'}</b>`;
-        listContainer.appendChild(li);
-    });
-}
-
-// Event Submit Form Pendaftaran
 document.getElementById('pendaftaranForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -137,8 +92,6 @@ document.getElementById('pendaftaranForm').addEventListener('submit', function(e
         }
         
         document.getElementById('pendaftaranForm').reset();
-        
-        // Refresh data dan kuota setelah submit
         setTimeout(loadDataKuota, 1500);
     })
     .catch(error => {
