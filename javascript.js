@@ -2,7 +2,7 @@ const scriptURL = 'https://script.google.com/macros/s/AKfycbxqYKDrmuGUYiZ2P3Ytkf
 
 let globalDataPeserta = [];
 
-// Fungsi untuk menentukan kuota maksimal berdasarkan tanggal
+// Fungsi untuk menentukan kuota maksimal keseluruhan berdasarkan tanggal
 function getKuotaMaksimal(tanggalStr) {
     if (tanggalStr && tanggalStr.includes("30 Oktober")) {
         return 6; // Kuota khusus tanggal 30 Oktober adalah 6 orang
@@ -57,7 +57,7 @@ function loadDataKuota() {
         .catch(error => console.error('Gagal memuat data:', error));
 }
 
-// 2. Fungsi untuk mendisable jam yang sudah dipilih pada tanggal tersebut
+// 2. Fungsi diperbarui: Mengatur setiap jam maksimal 2 orang (Kecuali 30 Oktober)
 function updateJamTerpakai() {
     const selectedTanggal = document.getElementById('tanggal').value;
     const selectJam = document.getElementById('jam');
@@ -75,15 +75,38 @@ function updateJamTerpakai() {
 
     if (!selectedTanggal) return;
 
-    // Filter peserta berdasarkan tanggal
+    // Filter peserta berdasarkan tanggal yang sedang dipilih saat ini
     const pesertaDiTanggalIni = globalDataPeserta.filter(item => item.tanggal && item.tanggal.trim() === selectedTanggal.trim());
-    const jamTerpakai = pesertaDiTanggalIni.map(item => item.jam);
+    
+    // Hitung berapa kali masing-masing jam sudah dipilih pada tanggal tersebut
+    let jamCountMap = {};
+    pesertaDiTanggalIni.forEach(item => {
+        if (item.jam) {
+            let cleanJam = item.jam.trim();
+            jamCountMap[cleanJam] = (jamCountMap[cleanJam] || 0) + 1;
+        }
+    });
 
-    // Matikan opsi jam yang sudah terisi
+    // Jalankan aturan penutupan opsi jam
     options.forEach(opt => {
-        if (jamTerpakai.includes(opt.value)) {
-            opt.disabled = true;
-            opt.text = opt.value + " (Sudah Terisi ❌)";
+        let jamValue = opt.value.trim();
+        let jumlahTerisi = jamCountMap[jamValue] || 0;
+
+        // JIKA BUKAN tanggal 30 Oktober, batasi maksimal 2 orang per sesi jam
+        if (!selectedTanggal.includes("30 Oktober")) {
+            if (jumlahTerisi >= 2) {
+                opt.disabled = true;
+                opt.text = opt.value + " (Penuh - 2/2 ❌)";
+            } else if (jumlahTerisi === 1) {
+                opt.disabled = false;
+                opt.text = opt.value + " (Sisa 1 Slot 👥)";
+            }
+        } else {
+            // JIKA TANGGAL 30 OKTOBER, tampilkan info pengisian tanpa mematikan opsi jam (bebas diisi)
+            if (jumlahTerisi > 0) {
+                opt.disabled = false;
+                opt.text = opt.value + " (" + jumlahTerisi + " Terisi ✅)";
+            }
         }
     });
 }
@@ -117,7 +140,7 @@ function renderDaftarPeserta(data) {
         htmlContent += `
             <div style="margin-bottom: 25px; background: rgba(0,0,0,0.25); padding: 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
                 <h4 style="color: ${isPenuh ? '#ff6b6b' : '#d4af37'}; margin-bottom: 12px; font-size: 16px;">
-                    📅 ${tglValue} &nbsp;|&nbsp; Kuota: ${jumlah}/${maxKuota} ${isPenuh ? '❌ <b>(PENUH)</b>' : '✅'}
+                    📅 ${tglValue} &nbsp;|&nbsp; Kuota Total: ${jumlah}/${maxKuota} ${isPenuh ? '❌ <b>(PENUH)</b>' : '✅'}
                 </h4>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
@@ -228,3 +251,4 @@ if (closeModalBtn) {
 window.onload = function() {
     loadDataKuota();
 };
+
